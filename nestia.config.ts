@@ -1,21 +1,19 @@
 import { INestiaConfig } from '@nestia/sdk';
+import { VersioningType } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from '@src/app.module';
+import { AppModule } from 'src/app.module';
 
 const NESTIA_CONFIG: INestiaConfig = {
-  input: () => NestFactory.create(AppModule),
-  // input: async () => {
-  //   const app = await NestFactory.create(AppModule);
-  //   app.setGlobalPrefix('api');
-  //   app.enableVersioning({
-  //     type: VersioningType.URI,
-  //     prefix: 'v',
-  //   });
-  //   return app;
-  // },
-  // input: ['src/controllers'],
+  input: async () => {
+    const app = await NestFactory.create(AppModule);
+    app.setGlobalPrefix('api');
+    app.enableVersioning({
+      type: VersioningType.URI,
+      prefix: 'v',
+    });
+    return app;
+  },
   output: 'src/api',
-
   swagger: {
     output: 'packages/api/swagger.json',
     beautify: true,
@@ -26,15 +24,16 @@ const NESTIA_CONFIG: INestiaConfig = {
         in: 'header',
       },
     },
-
+    decompose: true,
     servers: [
       {
-        url: 'http://localhost:8000',
+        url: 'http://localhost:3000',
         description: 'Local Server',
       },
     ],
   },
   distribute: 'packages/api',
   simulate: true,
+  clone: true,
 };
 export default NESTIA_CONFIG;

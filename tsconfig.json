@@ -13,22 +13,23 @@
     "incremental": true,
     "skipLibCheck": true,
     "strictNullChecks": true,
-    "resolveJsonModule": true,
+    "strict": true,
     "noImplicitAny": false,
     "strictBindCallApply": false,
-    "strict": true,
     "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false,
     "paths": {
-      "@src/*": ["./src/*"],
-      "@types/*": ["./src/types/*"],
-      "@v1/*": ["./src/v1/*"],
-      "@common/*": ["./src/common/*"],
-      "@config/*": ["./src/config/*"],
-      "@utils/*": ["./src/utils/*"]
+      "@type/*": ["src/type/*"],
+      "@v1/*": ["src/v1/*"],
+      "@common/*": ["src/common/*"],
+      "@config/*": ["src/config/*"],
+      "@utils/*": ["src/utils/*"],
+      "@/*": ["src/*"]
     },
-    "esModuleInterop": true,
     "plugins": [
+      {
+        "transform": "typia/lib/transform"
+      },
       {
         "transform": "@nestia/core/lib/transform",
         /**
@@ -52,12 +53,7 @@
          *   - null: Just use JSON.stringify() function, without boosting
          */
         "stringify": "assert"
-      },
-      {
-        "transform": "typia/lib/transform"
       }
     ]
-  },
-  "include": ["src/**/*", "test/**/*", "nestia.config.ts"],
-  "exclude": ["k6/**/*"]
+  }
 }
