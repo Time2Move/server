@@ -1,0 +1,85 @@
+name: 'deploy'
+on:
+  workflow_call:
+    inputs:
+      ECR_REPOSITORY:
+        description: 'ECR Repository'
+        required: true
+        type: string
+      SHA:
+        description: 'SHA'
+        required: false
+        default: '${{ github.sha }}'
+        type: string
+      PHASE:
+        description: 'Phase'
+        required: true
+        type: string
+      SERVICE:
+        description: 'Service'
+        required: true
+        type: string
+    secrets:
+      SLACK_WEBHOOK_URL:
+        description: 'Slack Webhook URL'
+        required: true
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          # role-to-assume: arn:aws:iam::<alias>:role/github-action-role
+          aws-region: ap-northeast-2
+
+      - name: Download env file
+        run: |
+          aws s3 cp s3://{}/${{ inputs.PHASE }}/${{ inputs.SERVICE }}/server.env .env
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ inputs.SHA }}
+
+        run: |
+          docker build -t $ECR_REGISTRY/${{ inputs.PHASE }}-${{inputs.ECR_REPOSITORY}}:$IMAGE_TAG .
+          docker push $ECR_REGISTRY/${{ inputs.PHASE }}-${{inputs.ECR_REPOSITORY}}:$IMAGE_TAG
+          echo "image=$ECR_REGISTRY/${{ inputs.PHASE }}-${{inputs.ECR_REPOSITORY}}:$IMAGE_TAG" >> $GITHUB_OUTPUT
+
+      - name: Fill in the new image ID in the Amazon ECS task definition
+        id: task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: deploy/${{ inputs.PHASE }}/task-definition.json
+          container-name: ${{ inputs.PHASE }}-service-${{inputs.SERVICE}}
+          image: ${{ steps.build-image.outputs.image }}
+
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.task-def.outputs.task-definition }}
+          service: ${{ inputs.PHASE }}-service-${{ inputs.SERVICE }}
+          cluster: ${{ inputs.PHASE }}-cluster
+          wait-for-service-stability: false
+
+      - name: Notify Slack Channel
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,commit,author,action,eventName,ref,workflow,job,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

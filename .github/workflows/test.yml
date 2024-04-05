@@ -1,0 +1,67 @@
+name: test
+on:
+  workflow_call:
+    inputs:
+      node-version:
+        description: 'Node.js version'
+        required: false
+        type: string
+        default: 20.5.1
+      pnpm-version:
+        description: 'pnpm version'
+        required: false
+        default: '8'
+        type: string
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.node-version }}
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: ${{ inputs.pnpm-version }}
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - name: Get pnpm store directory
+        id: pnpm-store
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_OUTPUT
+
+      - uses: actions/cache@v4
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+        env:
+          STORE_PATH: ${{ steps.pnpm-store.outputs.STORE_PATH }}
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Nestia and Prisma Set
+        run: pnpm run prestart
+
+      - name: lint and prettier
+        run: |
+          pnpm run eslint:format 
+          pnpm run prettier:format
+
+      - name: Test
+        run: pnpm run test
