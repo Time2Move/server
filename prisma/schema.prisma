@@ -39,6 +39,8 @@ model User {
   TermsAgreements TermsAgreements[]
   /// OAuth
   oAuths          OAuth[] 
+  /// Certification
+  certifications  Certification[] /// 인증
   // Car
   cars             Car[] /// 소유한 차량
   UserProfileImages UserProfileImage[]
@@ -168,6 +170,77 @@ enum OAUT_PROVIDER {
 }
 
 
+//------------------------------------------------
+// CERTIFICATION
+//------------------------------------------------
+model Certification {
+  //---------------
+  // column
+  //---------------
+  id        String             @id @db.Uuid /// 인증 ID
+  userId    String             @map("user_id") @db.Uuid /// 사용자 ID
+  targetType      CERTIFICATION_TARGET_TYPE /// 인증 타입
+  type     CERTIFICATION_TYPE /// 인증 종류
+  createdAt DateTime           @default(now()) @map("created_at")
+  updatedAt DateTime           @updatedAt @map("updated_at")
+
+  //---------------
+  /// relation
+  //---------------
+  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  certificationCode CertificationCode? @relation(fields: [id], references: [id], onDelete: Cascade)
+
+  @@unique([userId, type])
+  @@map("certification")
+}
+
+model CertificationCode {
+  //---------------
+  // column
+  //---------------
+  id        String               @id @db.Uuid /// 인증 코드 ID
+  targetType      CERTIFICATION_TARGET_TYPE /// 인증 타입
+  type     CERTIFICATION_TYPE /// 인증 종류
+  status    CERTIFICATION_STATUS /// 인증 상태
+  code      String /// 인증 코드 "XXXXXX"
+  target    String /// 인증 대상 "010-0000-0000"// "email" ...
+  createdAt DateTime             @default(now()) @map("created_at")
+  updatedAt DateTime             @updatedAt @map("updated_at")
+  expiredAt DateTime @map("expired_at") /// 만료일
+
+  //---------------
+  /// relation
+  //---------------
+  certification Certification? 
+
+  @@map("certification_code")
+
+  @@index([target])
+  @@index([target, status])
+  @@index([createdAt])
+  @@index([target, createdAt])
+  @@index([expiredAt])
+}
+
+enum CERTIFICATION_TARGET_TYPE {
+  PHONE
+  // EMAIL  // 확장성 고려
+  // IDENTITY // 확장성 고려
+	@@map("CERTIFICATION_TARGET_TYPE")
+}
+
+enum CERTIFICATION_TYPE {
+  SIGN_UP
+  FIND_PASSWORD
+}
+
+
+enum CERTIFICATION_STATUS {
+  PENDING // 대기
+  VERIFIED // 인증
+  SUCCESS // 성공  
+  EXPIRED // 만료
+}
 
 //------------------------------------------------
 // CAR
@@ -192,6 +265,8 @@ model Car {
 
   drivings Driving[] /// 운전자
   parkings Parking[] /// 주차 정보
+
+  @@map("car")
 }
 
 model CarImage {
@@ -209,6 +284,8 @@ model CarImage {
   //---------------
   car   Car   @relation(fields: [carId], references: [id], onDelete: Cascade)
   image Image @relation(fields: [imageId], references: [id], onDelete: Cascade)
+
+  @@map("car_image")
 }
 
 model CarSnapshot{
@@ -227,6 +304,8 @@ model CarSnapshot{
   /// relation
   //---------------
   car   Car   @relation(fields: [carId], references: [id], onDelete: Cascade)
+
+  @@map("car_snapshot")
 }
 
 model Driving {
@@ -298,6 +377,8 @@ model ParkingSnapshot {
   /// relation
   //---------------
   parking Parking @relation(fields: [carId, drivingId], references: [carId, drivingId], onDelete: Cascade)
+  
+  @@map("parking_snapshot")
 }
 
 enum PARKING_STATUS {
@@ -324,6 +405,8 @@ model Notification {
   /// relation
   //---------------
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notification")
 }
 
 enum NOTIFICATION_TYPE {
@@ -344,7 +427,6 @@ model UserReputation {
   id        String   @id @db.Uuid
   userId    String   @map("user_id") @db.Uuid
   writerId  String   @map("writer_id") @db.Uuid
-  type      String   @map("type")
   score     Int
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
@@ -354,6 +436,27 @@ model UserReputation {
   //---------------
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   writer User @relation(fields: [writerId], references: [id], onDelete: Cascade, name: "writerReputations")
+  reasons UserReputationReason[]
+
+  @@map("user_reputation")
+}
+
+model UserReputationReason {
+  //------------------------------------------------
+  // columns
+  //------------------------------------------------
+  id        String   @id @db.Uuid
+  userReputationId String @map("user_reputation_id") @db.Uuid
+  type      REPUTATION_TYPE @map("type")
+  score     Int
+  createdAt DateTime @default(now()) @map("created_at")
+
+  //---------------
+  /// relation
+  //---------------
+  userReputation UserReputation @relation(fields: [userReputationId], references: [id], onDelete: Cascade) 
+
+  @@map("user_reputation_reason")
 }
 
 enum REPUTATION_TYPE {
@@ -381,6 +484,8 @@ model Image {
   //---------------
   carImages        CarImage[]
   UserProfileImage UserProfileImage[]
+
+  @@map("image")
 }
 
 enum IMAGE_TYPE {
