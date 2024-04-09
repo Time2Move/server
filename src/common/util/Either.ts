@@ -27,3 +27,6 @@ export const fold: fold = <L, R, T>(
   }
   throw new Error('Either must be either left or right');
 };
+
+export const left: Left = (value) => ({ left: value });
+export const right: Right = (value) => ({ right: value });
