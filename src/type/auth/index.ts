@@ -123,9 +123,9 @@ export namespace Auth {
   }
 
   //----------------------------------------
-  // CheckCertification
+  // ValidateCertification
   //----------------------------------------
-  export namespace CheckCertification {
+  export namespace ValidateCertification {
     export namespace Request {
       export interface Dto {
         certificationId: string;
@@ -160,27 +160,53 @@ export namespace Auth {
   }
 
   export namespace RequsetCertificationCode {
+    export type TargetType = 'PHONE' | 'EMAIL';
+    export type Type = 'SIGN_UP' | 'FIND_PASSWORD';
     export namespace Request {
-      export interface Dto {
-        phone: string;
+      export type Dto = PhoneDto;
+      export interface PhoneDto {
+        target: string; // phone number (ex: 01012345678)
+        contryCode: string; // country code (ex: +82)
+        targetType: 'PHONE';
+        type: Type;
+      }
+
+      // 현재는 사용하지 않음
+      export interface EmailDto {
+        target: string; // email address
+        targetType: 'EMAIL';
+        type: Type;
       }
     }
 
     export namespace Response {
       export interface Dto {
-        success: boolean;
+        isSuccess: boolean;
       }
     }
     export type SUCCESS = Base.SUCCESS<Response.Dto>;
     export type Response = SUCCESS;
   }
 
-  export namespace CheckCertificationCode {
+  export namespace ValidateCertificationCode {
+    export type TargetType = 'PHONE' | 'EMAIL';
+    export type Type = 'SIGN_UP' | 'FIND_PASSWORD';
     export namespace Request {
-      export interface Dto {
-        phone: string;
+      export interface PhoneDto {
+        target: string;
+        contryCode: string;
         code: string;
+        targetType: 'PHONE';
+        type: 'SIGN_UP' | 'FIND_PASSWORD';
       }
+      export interface EmailDto {
+        target: string;
+        code: string;
+        targetType: 'EMAIL';
+        type: 'SIGN_UP' | 'FIND_PASSWORD';
+      }
+
+      export type Dto = PhoneDto | EmailDto;
     }
 
     export namespace Response {

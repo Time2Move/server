@@ -2,7 +2,10 @@ import { HttpStatus } from '@nestjs/common';
 import { Base } from '..';
 
 export namespace AuthError {
-  export type USER_EXISTS = Base.ERROR<'USER_EXISTS', HttpStatus.BAD_REQUEST>;
+  export type USER_ALREADY_EXISTS = Base.ERROR<
+    'USER_ALREADY_EXISTS',
+    HttpStatus.BAD_REQUEST
+  >;
 
   export type AUTH_INVALID = Base.ERROR<
     'AUTH_INVALID',
@@ -51,6 +54,11 @@ export namespace AuthError {
 
   export type CERTIFICATION_NOT_FOUND = Base.ERROR<
     'CERTIFICATION_NOT_FOUND',
+    HttpStatus.BAD_REQUEST
+  >;
+
+  export type CERTIFICATION_FAILED = Base.ERROR<
+    'CERTIFICATION_FAILED',
     HttpStatus.BAD_REQUEST
   >;
 }
