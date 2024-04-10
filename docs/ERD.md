@@ -8,7 +8,7 @@
 
 ```mermaid
 erDiagram
-"User" {
+"user" {
   String id PK
   String account UK
   String password
@@ -59,6 +59,7 @@ erDiagram
 }
 "certification" {
   String id PK
+  String certification_code_id FK
   String user_id FK
   CERTIFICATION_TARGET_TYPE targetType
   CERTIFICATION_TYPE type
@@ -165,31 +166,31 @@ erDiagram
   DateTime created_at
   DateTime deleted_at "nullable"
 }
-"user_snapshot" }o--|| "User" : user
-"user_last_snapshot" |o--|| "User" : user
+"user_snapshot" }o--|| "user" : user
+"user_last_snapshot" |o--|| "user" : user
 "user_last_snapshot" |o--|| "user_snapshot" : snapshot
-"user_profile_image" |o--|| "User" : user
+"user_profile_image" |o--|| "user" : user
 "user_profile_image" |o--|| "image" : image
-"terms_agreements" }o--|| "User" : user
-"oauth" }o--|| "User" : user
-"certification" }o--|| "User" : user
+"terms_agreements" }o--|| "user" : user
+"oauth" }o--|| "user" : user
+"certification" }o--|| "user" : user
 "certification" |o--|| "certification_code" : certificationCode
-"car" }o--|| "User" : owner
+"car" }o--|| "user" : owner
 "car_image" }o--|| "car" : car
 "car_image" }o--|| "image" : image
 "car_snapshot" }o--|| "car" : car
-"driving" }o--|| "User" : user
+"driving" }o--|| "user" : user
 "driving" }o--|| "car" : car
 "parking" }o--|| "car" : car
 "parking" }o--|| "driving" : driving
 "parking_snapshot" }o--|| "parking" : parking
-"notification" }o--|| "User" : user
-"user_reputation" }o--|| "User" : user
-"user_reputation" }o--|| "User" : writer
+"notification" }o--|| "user" : user
+"user_reputation" }o--|| "user" : user
+"user_reputation" }o--|| "user" : writer
 "user_reputation_reason" }o--|| "user_reputation" : userReputation
 ```
 
-### `User`
+### `user`
 
 **Properties**
 
@@ -260,10 +261,11 @@ erDiagram
 
 **Properties**
 
-- `id`: 인증 ID
-- `user_id`: 사용자 ID
-- `targetType`: 인증 타입
-- `type`: 인증 종류
+- `id`:
+- `certification_code_id`:
+- `user_id`:
+- `targetType`:
+- `type`:
 - `created_at`:
 - `updated_at`:
 
@@ -271,15 +273,15 @@ erDiagram
 
 **Properties**
 
-- `id`: 인증 코드 ID
-- `targetType`: 인증 타입
-- `type`: 인증 종류
-- `status`: 인증 상태
-- `code`: 인증 코드 "XXXXXX"
-- `target`: 인증 대상 "010-0000-0000"// "email" ...
+- `id`:
+- `targetType`:
+- `type`:
+- `status`:
+- `code`:
+- `target`:
 - `created_at`:
 - `updated_at`:
-- `expired_at`: 만료일
+- `expired_at`:
 
 ### `car`
 
