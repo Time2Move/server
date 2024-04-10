@@ -50,6 +50,8 @@ model User {
   writerReputations UserReputation[]  @relation("writerReputations") /// 평판 작성
   // Notification
   notifications    Notification[] /// 알림
+
+  @@map("user")
 }
 
 model UserSnapshot {
@@ -174,47 +176,33 @@ enum OAUT_PROVIDER {
 // CERTIFICATION
 //------------------------------------------------
 model Certification {
-  //---------------
-  // column
-  //---------------
-  id        String             @id @db.Uuid /// 인증 ID
-  userId    String             @map("user_id") @db.Uuid /// 사용자 ID
-  targetType      CERTIFICATION_TARGET_TYPE /// 인증 타입
-  type     CERTIFICATION_TYPE /// 인증 종류
-  createdAt DateTime           @default(now()) @map("created_at")
-  updatedAt DateTime           @updatedAt @map("updated_at")
-
-  //---------------
-  /// relation
-  //---------------
-  user              User               @relation(fields: [userId], references: [id], onDelete: Cascade)
-  certificationCode CertificationCode? @relation(fields: [id], references: [id], onDelete: Cascade)
-
+  id                 String             @id @db.Uuid
+  certificationCodeId String            @map("certification_code_id") @db.Uuid @unique
+  userId             String             @map("user_id") @db.Uuid
+  targetType         CERTIFICATION_TARGET_TYPE
+  type               CERTIFICATION_TYPE
+  createdAt          DateTime           @default(now()) @map("created_at")
+  updatedAt          DateTime           @updatedAt @map("updated_at")
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  certificationCode  CertificationCode  @relation(fields: [certificationCodeId], references: [id], onDelete: Cascade)
+  
   @@unique([userId, type])
   @@map("certification")
 }
 
 model CertificationCode {
-  //---------------
-  // column
-  //---------------
-  id        String               @id @db.Uuid /// 인증 코드 ID
-  targetType      CERTIFICATION_TARGET_TYPE /// 인증 타입
-  type     CERTIFICATION_TYPE /// 인증 종류
-  status    CERTIFICATION_STATUS /// 인증 상태
-  code      String /// 인증 코드 "XXXXXX"
-  target    String /// 인증 대상 "010-0000-0000"// "email" ...
-  createdAt DateTime             @default(now()) @map("created_at")
-  updatedAt DateTime             @updatedAt @map("updated_at")
-  expiredAt DateTime @map("expired_at") /// 만료일
-
-  //---------------
-  /// relation
-  //---------------
-  certification Certification? 
+  id              String               @id @db.Uuid
+  targetType      CERTIFICATION_TARGET_TYPE
+  type            CERTIFICATION_TYPE
+  status          CERTIFICATION_STATUS
+  code            String
+  target          String
+  createdAt       DateTime             @default(now()) @map("created_at")
+  updatedAt       DateTime             @updatedAt @map("updated_at")
+  expiredAt       DateTime             @map("expired_at")
+  certifications  Certification?       // 이 관계는 요구사항에 따라 조정될 수 있음
 
   @@map("certification_code")
-
   @@index([target])
   @@index([target, status])
   @@index([createdAt])
