@@ -1,7 +1,9 @@
-import { eitherToResponse } from '@common/util/Res';
+import { isLeft } from '@common/util/Either';
+import { eitherToResponse, generateResponse } from '@common/util/Res';
 import { TypedBody, TypedRoute } from '@nestia/core';
-import { Controller } from '@nestjs/common';
+import { Controller, Res } from '@nestjs/common';
 import { Auth } from '@type/auth';
+import { Response } from 'express';
 import { AuthService } from './provider/auth.service';
 @Controller('/auth')
 export class AuthController {
@@ -12,7 +14,22 @@ export class AuthController {
   }
 
   @TypedRoute.Post('/login')
-  login() {}
+  async login(
+    @TypedBody() dto: Auth.Login.Request.Dto,
+    @Res({ passthrough: true }) res: Response,
+  ) {
+    const result = await this.authService.login(dto);
+    if (isLeft(result)) {
+      return eitherToResponse(result);
+    }
+    const { refreshToken, ...rest } = result.value;
+    res.cookie('_r', refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+    return generateResponse({ ...rest });
+  }
 
   @TypedRoute.Post('/signup')
   async signup(@TypedBody() dto: Auth.Signup.Request.Dto) {
