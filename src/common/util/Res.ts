@@ -1,6 +1,6 @@
 import { ErrorHttpStatusCode } from '@nestjs/common/utils/http-error-by-code.util';
 import { Base } from '@type/index';
-import { Either } from './Either';
+import { Either, isLeft } from './Either';
 import { throwError } from './Error';
 
 export const generateResponse = <T>(data: T): Base.SUCCESS<T> => {
@@ -17,11 +17,8 @@ export const eitherToResponse = <
 >(
   either: Either<E, T>,
 ): Base.SUCCESS<T> | E => {
-  if (either.left) {
-    return throwError(either.left);
+  if (isLeft(either)) {
+    return throwError(either.value);
   }
-  if (either.right) {
-    return generateResponse(either.right);
-  }
-  throw new Error('Either is not defined');
+  return generateResponse(either.value);
 };
