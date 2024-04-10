@@ -7,7 +7,7 @@ import { Either, isLeft, left, right } from '@common/util/Either';
 import { Injectable, Logger } from '@nestjs/common';
 import { CERTIFICATION_TYPE } from '@prisma/client';
 import { AuthError } from '@type/auth/error';
-import { UserService } from './../../providers/user.service';
+import { UserService } from '../../providers/user/user.service';
 
 @Injectable()
 export class PhoneCertificationService {
@@ -73,7 +73,8 @@ export class PhoneCertificationService {
     Either<
       | AuthError.CERTIFICATION_INVALID
       | AuthError.CERTIFICATION_EXPIRED
-      | AuthError.CERTIFICATION_NOT_FOUND,
+      | AuthError.CERTIFICATION_NOT_FOUND
+      | AuthError.CERTIFICATION_ALREADY_VERIFIED,
       { cetificationId: string }
     >
   > {
@@ -85,13 +86,16 @@ export class PhoneCertificationService {
             code,
             targetType: this.targetType,
             type,
-            status: 'PENDING',
           },
           tx,
         );
         if (!certificationCode) {
           return left(AUTH_ERROR.CERTIFICATION_INVALID);
         }
+        if (certificationCode.status === 'VERIFIED') {
+          return left(AUTH_ERROR.CERTIFICATION_ALREADY_VERIFIED);
+        }
+
         if (certificationCode.expiredAt < new Date()) {
           await this.certificationCodeRepo.updateManyStatus(
             {
@@ -164,7 +168,9 @@ export class PhoneCertificationService {
     await this.certificationCodeRepo.updateManyStatus(
       {
         target,
-        status: 'PENDING',
+        status: {
+          in: ['PENDING', 'VERIFIED'],
+        },
       },
       'EXPIRED',
       tx,

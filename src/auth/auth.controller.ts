@@ -1,3 +1,4 @@
+import { eitherToResponse } from '@common/util/Res';
 import { TypedBody, TypedRoute } from '@nestia/core';
 import { Controller } from '@nestjs/common';
 import { Auth } from '@type/auth';
@@ -14,7 +15,10 @@ export class AuthController {
   login() {}
 
   @TypedRoute.Post('/signup')
-  signup() {}
+  async signup(@TypedBody() dto: Auth.Signup.Request.Dto) {
+    const result = await this.authService.signup(dto);
+    return eitherToResponse(result);
+  }
 
   @TypedRoute.Get('/token')
   refreshToken() {}
@@ -23,18 +27,18 @@ export class AuthController {
   logout() {}
 
   @TypedRoute.Post('/certification')
-  requsetCertificationCode(
+  async requsetCertificationCode(
     @TypedBody() dto: Auth.RequsetCertificationCode.Request.Dto,
   ) {
-    const result = this.authService.requsetCertificationCode(dto);
-    return result;
+    const result = await this.authService.requsetCertificationCode(dto);
+    return eitherToResponse(result);
   }
 
   @TypedRoute.Post('/certification/validate')
-  validateCertificationCode(
+  async validateCertificationCode(
     @TypedBody() dto: Auth.ValidateCertificationCode.Request.Dto,
   ) {
-    const result = this.authService.validateCertificationCode(dto);
-    return result;
+    const result = await this.authService.validateCertificationCode(dto);
+    return eitherToResponse(result);
   }
 }
