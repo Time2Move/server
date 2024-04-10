@@ -1,5 +1,5 @@
 import { AUTH_ERROR } from '@/constant/error/auth.error';
-import { throwError } from '@common/util/throwError';
+import { throwError } from '@common/util/Error';
 import { Inject } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { JWT_OPTIONS } from '../auth.constant';

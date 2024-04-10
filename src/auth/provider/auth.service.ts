@@ -1,31 +1,52 @@
+import { AUTH_ERROR } from '@/constant/error/auth.error';
+import { Either, left } from '@common/util/Either';
 import { Injectable } from '@nestjs/common';
 import { Auth } from '@type/auth';
+import { AuthError } from '@type/auth/error';
+import { AuthLocalService } from '../implement/auth.local.service';
 import { PhoneCertificationService } from './phone.certification.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly phoneCertificationService: PhoneCertificationService,
+    private readonly localService: AuthLocalService,
   ) {}
 
   async login() {
     return 'login';
   }
 
-  async signup(dto: Auth.Signup.Request.Dto) {
+  async signup(
+    dto: Auth.Signup.Request.Dto,
+  ): Promise<
+    Either<
+      | AuthError.CERTIFICATION_INVALID
+      | AuthError.CERTIFICATION_NOT_FOUND
+      | AuthError.USER_ALREADY_EXISTS
+      | AuthError.TYPE_NOT_SUPPORTED,
+      { userId: string }
+    >
+  > {
     switch (dto.type) {
       case 'LOCAL':
-        return { userId: '2' };
-      case 'KAKAO':
-        return { userId: '1' };
+        return await this.localService.signup(dto);
       default:
-        return { userId: '3' };
+        return left(AUTH_ERROR.TYPE_NOT_SUPPORTED);
     }
   }
 
   async requsetCertificationCode(
     dto: Auth.RequsetCertificationCode.Request.Dto,
-  ) {
+  ): Promise<
+    Either<
+      | AuthError.CERTIFICATION_LIMIT_EXCEEDED
+      | AuthError.CERTIFICATION_FAILED
+      | AuthError.USER_ALREADY_EXISTS
+      | AuthError.TYPE_NOT_SUPPORTED,
+      boolean
+    >
+  > {
     switch (dto.targetType) {
       case 'PHONE':
         const code = await this.generateCertificationCode();
@@ -35,13 +56,22 @@ export class AuthService {
           dto.type,
         );
       default:
-        return false;
+        return left(AUTH_ERROR.TYPE_NOT_SUPPORTED);
     }
   }
 
   async validateCertificationCode(
     dto: Auth.ValidateCertificationCode.Request.Dto,
-  ) {
+  ): Promise<
+    Either<
+      | AuthError.CERTIFICATION_INVALID
+      | AuthError.CERTIFICATION_EXPIRED
+      | AuthError.CERTIFICATION_NOT_FOUND
+      | AuthError.CERTIFICATION_ALREADY_VERIFIED
+      | AuthError.TYPE_NOT_SUPPORTED,
+      { cetificationId: string }
+    >
+  > {
     switch (dto.targetType) {
       case 'PHONE':
         return await this.phoneCertificationService.verifyCertificationCode(
@@ -50,7 +80,7 @@ export class AuthService {
           dto.type,
         );
       default:
-        return false;
+        return left(AUTH_ERROR.TYPE_NOT_SUPPORTED);
     }
   }
 
