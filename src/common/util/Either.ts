@@ -5,6 +5,7 @@ export type Right = <R>(value: R) => Either<never, R>;
 export const isLeft = <L, R>(
   either: Either<L, R>,
 ): either is Either<L, never> => 'left' in either;
+
 export const isRight = <L, R>(
   either: Either<L, R>,
 ): either is Either<never, R> => 'right' in either;
