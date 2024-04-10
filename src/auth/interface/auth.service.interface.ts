@@ -6,6 +6,17 @@ export interface JwtPayload {
   type: Auth.LocalType;
 }
 
+export interface JwtOptions {
+  access_secret: string;
+  refresh_secret: string;
+  access_expires_in: string;
+  refresh_expires_in: string;
+}
+
+export interface PasswordOptions {
+  salt: string | number;
+}
+
 export interface BasicAuthJWTService {
   accessTokenSign(payload: JwtPayload): string;
   accessTokenVerify(token: string): JwtPayload;
@@ -22,7 +33,7 @@ export interface BasicAuthPasswordService {
 }
 
 export interface BasicAuthService {
-  signup(dto: Auth.SignUp.Request.Dto): Promise<{ email: string; id: string }>;
+  signup(dto: Auth.Signup.Request.Dto): Promise<{ email: string; id: string }>;
 
   login(dto: Auth.Login.Request.Dto): Promise<{
     access_token: string;
