@@ -47,6 +47,11 @@ export namespace AuthError {
     HttpStatus.BAD_REQUEST
   >;
 
+  export type CERTIFICATION_ALREADY_VERIFIED = Base.ERROR<
+    'CERTIFICATION_ALREADY_VERIFIED',
+    HttpStatus.BAD_REQUEST
+  >;
+
   export type CERTIFICATION_LIMIT_EXCEEDED = Base.ERROR<
     'CERTIFICATION_LIMIT_EXCEEDED',
     HttpStatus.BAD_REQUEST
@@ -59,6 +64,11 @@ export namespace AuthError {
 
   export type CERTIFICATION_FAILED = Base.ERROR<
     'CERTIFICATION_FAILED',
+    HttpStatus.BAD_REQUEST
+  >;
+
+  export type TYPE_NOT_SUPPORTED = Base.ERROR<
+    'TYPE_NOT_SUPPORTED',
     HttpStatus.BAD_REQUEST
   >;
 }

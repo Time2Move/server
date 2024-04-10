@@ -106,6 +106,7 @@ export namespace Auth {
         certificationId: string;
         phone: string;
         contryCode: string;
+        nickname: string;
       }
 
       export type Dto = OauthDto | LocalDto;

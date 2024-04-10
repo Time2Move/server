@@ -24,6 +24,9 @@ export namespace AUTH_ERROR {
   export const CERTIFICATION_EXPIRED =
     typia.random<AuthError.CERTIFICATION_EXPIRED>();
 
+  export const CERTIFICATION_ALREADY_VERIFIED =
+    typia.random<AuthError.CERTIFICATION_ALREADY_VERIFIED>();
+
   export const CERTIFICATION_LIMIT_EXCEEDED =
     typia.random<AuthError.CERTIFICATION_LIMIT_EXCEEDED>();
 
@@ -32,4 +35,7 @@ export namespace AUTH_ERROR {
 
   export const CERTIFICATION_FAILED =
     typia.random<AuthError.CERTIFICATION_FAILED>();
+
+  export const TYPE_NOT_SUPPORTED =
+    typia.random<AuthError.TYPE_NOT_SUPPORTED>();
 }
