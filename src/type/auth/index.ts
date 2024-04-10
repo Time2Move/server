@@ -1,8 +1,8 @@
 import { Base } from '..';
 
 export namespace Auth {
-  export type OauthType = 'kakao' | 'google' | 'naver';
-  export type LocalType = 'local';
+  export type OauthType = 'KAKAO' | 'GOOGLE' | 'NAVER';
+  export type LocalType = 'LOCAL';
   export type LoginType = OauthType | LocalType;
 
   //----------------------------------------
@@ -92,7 +92,7 @@ export namespace Auth {
   //----------------------------------------
   // signUp (회원가입)
   //----------------------------------------
-  export namespace SignUp {
+  export namespace Signup {
     export namespace Request {
       export interface OauthDto {
         type: OauthType;
@@ -105,12 +105,10 @@ export namespace Auth {
         password: string;
         certificationId: string;
         phone: string;
+        contryCode: string;
       }
 
-      export interface Dto {
-        account: string;
-        password: string;
-      }
+      export type Dto = OauthDto | LocalDto;
     }
 
     export namespace Response {
@@ -147,6 +145,7 @@ export namespace Auth {
       export interface Dto {
         password: string;
         newPassword: string;
+        type: 'FIND_PASSWORD' | 'PROFILE';
       }
     }
 
