@@ -12,8 +12,15 @@ export class AuthService {
     return 'login';
   }
 
-  async signup() {
-    return 'signup';
+  async signup(dto: Auth.Signup.Request.Dto) {
+    switch (dto.type) {
+      case 'LOCAL':
+        return { userId: '2' };
+      case 'KAKAO':
+        return { userId: '1' };
+      default:
+        return { userId: '3' };
+    }
   }
 
   async requsetCertificationCode(
@@ -31,6 +38,7 @@ export class AuthService {
         return false;
     }
   }
+
   async validateCertificationCode(
     dto: Auth.ValidateCertificationCode.Request.Dto,
   ) {
