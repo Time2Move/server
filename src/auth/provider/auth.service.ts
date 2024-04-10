@@ -13,8 +13,23 @@ export class AuthService {
     private readonly localService: AuthLocalService,
   ) {}
 
-  async login() {
-    return 'login';
+  async login(dto: Auth.Login.Request.Dto): Promise<
+    Either<
+      AuthError.AUTH_INVALID | AuthError.TYPE_NOT_SUPPORTED,
+      {
+        accessToken: string;
+        refreshToken: string;
+        nickname: string;
+        userId: string;
+      }
+    >
+  > {
+    switch (dto.type) {
+      case 'LOCAL':
+        return await this.localService.login(dto);
+      default:
+        return left(AUTH_ERROR.TYPE_NOT_SUPPORTED);
+    }
   }
 
   async signup(

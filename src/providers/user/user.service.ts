@@ -2,6 +2,7 @@ import { PrismaService } from '@common/prisma/prisma.service';
 import { PrismaTxType } from '@common/prisma/prisma.type';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
+import { User } from '@type/user';
 import { UserRepository } from '../../repository/user.repository';
 import { UserSnapshotService } from './user.snapshot.service';
 
@@ -19,6 +20,13 @@ export class UserService {
   ): Promise<boolean> {
     const user = await this.userRepository.findUnique(where, tx);
     return !!user;
+  }
+
+  async findUser(
+    where: Prisma.UserWhereUniqueInput,
+    tx?: PrismaTxType,
+  ): Promise<User | null> {
+    return this.userRepository.findUnique(where, tx);
   }
 
   async createUser(

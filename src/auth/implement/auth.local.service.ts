@@ -20,8 +20,47 @@ export class AuthLocalService {
     private readonly prismaService: PrismaService,
   ) {}
 
-  async login(dto: Auth.Login.Request.LocalDto) {
-    const {} = dto;
+  async login(dto: Auth.Login.Request.LocalDto): Promise<
+    Either<
+      AuthError.AUTH_INVALID,
+      {
+        accessToken: string;
+        refreshToken: string;
+        nickname: string;
+        userId: string;
+      }
+    >
+  > {
+    const { account, password } = dto;
+    const user = await this.userService.findUser({ account });
+    if (!user) {
+      return left(AUTH_ERROR.AUTH_INVALID);
+    }
+    const { password: hashedPassword } = user;
+    const isMatch = await this.authPasswordService.compare(
+      password,
+      hashedPassword,
+    );
+    if (isLeft(isMatch)) {
+      return isMatch;
+    }
+    const accessToken = this.authJwtService.accessTokenSign({
+      id: user.id,
+      account: user.account,
+      type: dto.type,
+    });
+    const refreshToken = this.authJwtService.refreshTokenSign({
+      id: user.id,
+      account: user.account,
+      type: dto.type,
+    });
+
+    return right({
+      accessToken,
+      refreshToken,
+      nickname: user.nickname,
+      userId: user.id,
+    });
   }
 
   async signup(
