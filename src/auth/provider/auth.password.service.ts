@@ -1,5 +1,5 @@
 import { AUTH_ERROR } from '@/constant/error/auth.error';
-import { UserService } from '@/providers/user.service';
+import { UserService } from '@/providers/user/user.service';
 import { PrismaService } from '@common/prisma/prisma.service';
 import { left, right } from '@common/util/Either';
 import { Inject, Injectable } from '@nestjs/common';
@@ -19,7 +19,7 @@ export class AuthPasswordService {
   ) {}
 
   async hash(password: string) {
-    const hashedPassword = bcrypt.hash(password, this.option.salt);
+    const hashedPassword = bcrypt.hash(password, Number(this.option.salt));
     return hashedPassword;
   }
 
