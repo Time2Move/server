@@ -14,6 +14,9 @@ export const AUTH_STRATEGY = Symbol('AUTH_STRATEGY');
 
 export const AUTH_CACHE_SERVICE = Symbol('AUTH_CACHE_SERVICE');
 
+// COOKIE
+export const REFRESH_COOKIE_NAME = '_r';
+
 //OAUTH URL
 //// KAKAO
 export const OAUTH_KAKAO_GET_TOKEN_URL = 'https://kauth.kakao.com/oauth/token';

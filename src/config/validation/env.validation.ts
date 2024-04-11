@@ -24,7 +24,8 @@ export const envValidationSchema = Joi.object({
   TWILIO_PHONE_NUMBER: Joi.string().required(),
 
   //////////////////////////////////////////
-  // JWT
+  // REDIS (CACHE)
+  REDIS_URL: Joi.string().required(),
 
   //////////////////////////////////////////
   // OAUTH

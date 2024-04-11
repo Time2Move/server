@@ -1,16 +1,26 @@
+import { CurrentUser } from '@common/decorator/CurrentUser';
+import { LoginOnly } from '@common/decorator/LoginOnly';
 import { isLeft } from '@common/util/Either';
 import { eitherToResponse, generateResponse } from '@common/util/Res';
 import { TypedBody, TypedRoute } from '@nestia/core';
-import { Controller, Res } from '@nestjs/common';
+import { Controller, Res, UseGuards } from '@nestjs/common';
 import { Auth } from '@type/auth';
+import { Base } from '@type/index';
 import { Response } from 'express';
+import { REFRESH_COOKIE_NAME } from './auth.constant';
+import { RefreshGuard } from './guard/refresh.guard';
+import { JwtPayload } from './interface/auth.service.interface';
 import { AuthService } from './provider/auth.service';
 @Controller('/auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
   @TypedRoute.Get('/')
-  checkLogin() {
-    return 'login';
+  @LoginOnly()
+  checkLogin(@CurrentUser() user: JwtPayload) {
+    if (user) {
+      return generateResponse({ isLogin: true, user: user });
+    }
+    return generateResponse({ isLogin: false });
   }
 
   @TypedRoute.Post('/login')
@@ -23,7 +33,7 @@ export class AuthController {
       return eitherToResponse(result);
     }
     const { refreshToken, ...rest } = result.value;
-    res.cookie('_r', refreshToken, {
+    res.cookie(REFRESH_COOKIE_NAME, refreshToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
@@ -38,10 +48,34 @@ export class AuthController {
   }
 
   @TypedRoute.Get('/token')
-  refreshToken() {}
+  @UseGuards(RefreshGuard)
+  async refreshToken(
+    @CurrentUser() user: JwtPayload,
+    @Res({ passthrough: true }) res: Response,
+  ): Promise<
+    Base.SUCCESS<{
+      accessToken: string;
+    }>
+  > {
+    const { refreshToken, accessToken } =
+      await this.authService.refreshToken(user);
+    res.cookie(REFRESH_COOKIE_NAME, refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
+    });
+    return generateResponse({ accessToken });
+  }
 
   @TypedRoute.Post('/logout')
-  logout() {}
+  @LoginOnly()
+  logout(@Res() res: Response, @CurrentUser() user: JwtPayload) {
+    this.authService.logout(user);
+    res.clearCookie(REFRESH_COOKIE_NAME);
+    return generateResponse({
+      isLogin: false,
+    });
+  }
 
   @TypedRoute.Post('/certification')
   async requsetCertificationCode(

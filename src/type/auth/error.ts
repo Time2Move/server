@@ -32,6 +32,11 @@ export namespace AuthError {
     HttpStatus.UNAUTHORIZED
   >;
 
+  export type TOKEN_MISSING = Base.ERROR<
+    'TOKEN_MISSING',
+    HttpStatus.UNAUTHORIZED
+  >;
+
   export type CERTIFICATION_NOT_SUPPORTED = Base.ERROR<
     'CERTIFICATION_NOT_SUPPORTED',
     HttpStatus.BAD_REQUEST

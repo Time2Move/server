@@ -1,4 +1,6 @@
+import { Either } from '@common/util/Either';
 import { Auth } from '@type/auth';
+import { AuthError } from '@type/auth/error';
 
 export interface JwtPayload {
   id: string;
@@ -35,11 +37,17 @@ export interface BasicAuthPasswordService {
 export interface BasicAuthService {
   signup(dto: Auth.Signup.Request.Dto): Promise<{ email: string; id: string }>;
 
-  login(dto: Auth.Login.Request.Dto): Promise<{
-    access_token: string;
-    refresh_token: string;
-    payload: JwtPayload;
-  }>;
+  login(dto: Auth.Login.Request.Dto): Promise<
+    Either<
+      AuthError.AUTH_INVALID,
+      {
+        accessToken: string;
+        refreshToken: string;
+        nickname: string;
+        userId: string;
+      }
+    >
+  >;
 }
 
 export interface BasicAuthServiceAdapter extends BasicAuthService {

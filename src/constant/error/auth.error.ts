@@ -15,6 +15,8 @@ export namespace AUTH_ERROR {
 
   export const TOKEN_BLACKLISTED = typia.random<AuthError.TOKEN_BLACKLISTED>();
 
+  export const TOKEN_MISSING = typia.random<AuthError.TOKEN_MISSING>();
+
   export const CERTIFICATION_NOT_SUPPORTED =
     typia.random<AuthError.CERTIFICATION_NOT_SUPPORTED>();
 

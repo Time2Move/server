@@ -1,7 +1,9 @@
 import { PrismaModule } from '@common/prisma/prisma.module';
 import { envValidationSchema } from '@config/validation/env.validation';
 import { HttpModule } from '@nestjs/axios';
+import { CacheModule, CacheStore } from '@nestjs/cache-manager';
 import { ConfigModule } from '@nestjs/config';
+import { redisStore } from 'cache-manager-redis-store';
 import { TwilioModule } from 'nestjs-twilio';
 
 ///////// configModule
@@ -27,9 +29,25 @@ export const twilioModule = TwilioModule.forRoot({
   isGlobal: true,
 });
 
+/// cacheModule
+export const cacheModule = CacheModule.registerAsync({
+  isGlobal: true,
+  useFactory: async () => {
+    const url = process.env.REDIS_URL;
+    const store = await redisStore({
+      url,
+    });
+    return {
+      ttl: 60 * 60 * 24,
+      store: store,
+    } as unknown as CacheStore;
+  },
+});
+
 export const defaultModules = [
   configModule,
   httpModule,
   twilioModule,
+  cacheModule,
   PrismaModule,
 ];
