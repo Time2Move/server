@@ -25,7 +25,7 @@ model User {
   password     String
   nickname     String            @unique
   phone        String            @unique
-  contryCode   String            @map("contry_code")
+  countryCode   String            @map("country_code")
   createdAt    DateTime          @default(now()) @map("created_at")
   updatedAt    DateTime          @updatedAt @map("updated_at")
   deletedAt    DateTime?         @map("deleted_at")
@@ -51,6 +51,7 @@ model User {
   // Notification
   notifications    Notification[] /// 알림
 
+  relations Rental[]
   @@map("user")
 }
 
@@ -64,7 +65,7 @@ model UserSnapshot {
   password     String
   nickname     String
   phone        String
-  contryCode   String            @map("contry_code")
+  countryCode   String            @map("contry_code")
   createdAt    DateTime          @default(now()) @map("created_at")
   //------------------------------------------------
   // relation
@@ -237,13 +238,13 @@ model Car {
   //------------------------------------------------
   // columns
   //------------------------------------------------
-  id        String   @id @db.Uuid
+  id        String   @id  @db.Uuid
   ownerId   String   @map("owner_id") @db.Uuid
   type      String   @map("type")
-  number    String   @unique
+  number    String   
+  status    CAR_STATUS @map("status") 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
   //---------------
   /// relation
   //---------------
@@ -254,7 +255,9 @@ model Car {
   drivings Driving[] /// 운전자
   parkings Parking[] /// 주차 정보
 
+  relations Rental[]
   @@map("car")
+  @@index([number, status])
 }
 
 model CarImage {
@@ -287,7 +290,7 @@ model CarSnapshot{
   number    String   @unique
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
+  status    CAR_STATUS @map("status")
   //---------------
   /// relation
   //---------------
@@ -296,6 +299,32 @@ model CarSnapshot{
   @@map("car_snapshot")
 }
 
+enum CAR_STATUS {
+  ACTIVE // 활성
+  SCRAPPED // 폐차
+}
+
+model Rental {
+  id String @id @db.Uuid
+  carId String @map("car_id") @db.Uuid
+  userId String @map("user_id") @db.Uuid
+  startDate DateTime @map("start_date")
+  endDate DateTime @map("end_date")
+  status RENTAL_STATUS @map("status")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  car Car @relation(fields: [carId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  drivings Driving[]
+}
+
+enum RENTAL_STATUS {
+  REQUEST // 요청
+  ACCEPT // 수락
+  REJECT // 거절
+  COMPLETE // 완료
+}
 model Driving {
   //------------------------------------------------
   // columns
@@ -305,14 +334,17 @@ model Driving {
   carId     String   @map("car_id") @db.Uuid
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
-
+  rentalId  String?  @map("rental_id") @db.Uuid 
   //---------------
   /// relation
   //---------------
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
   car  Car  @relation(fields: [carId], references: [id], onDelete: Cascade)
-  Parking Parking[]
+  parking Parking[]
+  rental Rental? @relation(fields: [rentalId], references: [id], onDelete: SetNull)
 	@@map("driving")
+  @@index([userId])
+  @@index([carId, userId])
 }
 
 model Parking {
