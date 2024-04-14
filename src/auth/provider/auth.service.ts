@@ -1,5 +1,5 @@
 import { AUTH_ERROR } from '@/constant/error/auth.error';
-import { Either, isLeft, left } from '@common/util/Either';
+import { Either, Left } from '@common/util/Either';
 import { Inject, Injectable } from '@nestjs/common';
 import { Auth } from '@type/auth';
 import { AuthError } from '@type/auth/error';
@@ -42,7 +42,9 @@ export class AuthService {
           this.localService.login.bind(this.localService),
         )(dto);
       default:
-        return left(AUTH_ERROR.TYPE_NOT_SUPPORTED);
+        return Left.create(
+          AUTH_ERROR.TYPE_NOT_SUPPORTED('지원하지 않는 타입입니다.'),
+        );
     }
   }
 
@@ -61,7 +63,9 @@ export class AuthService {
       case 'LOCAL':
         return await this.localService.signup(dto);
       default:
-        return left(AUTH_ERROR.TYPE_NOT_SUPPORTED);
+        return Left.create(
+          AUTH_ERROR.TYPE_NOT_SUPPORTED('지원하지 않는 타입입니다.'),
+        );
     }
   }
 
@@ -94,12 +98,14 @@ export class AuthService {
       case 'PHONE':
         const code = await this.generateCertificationCode();
         return await this.phoneCertificationService.sendCertificationCode(
-          `${dto.contryCode}${dto.target}`,
+          `${dto.countryCode}${dto.target}`,
           code,
           dto.type,
         );
       default:
-        return left(AUTH_ERROR.TYPE_NOT_SUPPORTED);
+        return Left.create(
+          AUTH_ERROR.TYPE_NOT_SUPPORTED('지원하지 않는 타입입니다.'),
+        );
     }
   }
 
@@ -118,12 +124,14 @@ export class AuthService {
     switch (dto.targetType) {
       case 'PHONE':
         return await this.phoneCertificationService.verifyCertificationCode(
-          `${dto.contryCode}${dto.target}`,
+          `${dto.countryCode}${dto.target}`,
           dto.code,
           dto.type,
         );
       default:
-        return left(AUTH_ERROR.TYPE_NOT_SUPPORTED);
+        return Left.create(
+          AUTH_ERROR.TYPE_NOT_SUPPORTED('지원하지 않는 타입입니다.'),
+        );
     }
   }
 
@@ -136,7 +144,7 @@ export class AuthService {
   private processLogin(login: BasicAuthService['login']) {
     return async (dto: Auth.Login.Request.Dto) => {
       const result = await login(dto);
-      if (isLeft(result)) return result;
+      if (result.isLeft()) return result;
       const { refreshToken, userId } = result.value;
       await this.cacheService.setCache(userId, refreshToken);
       return result;

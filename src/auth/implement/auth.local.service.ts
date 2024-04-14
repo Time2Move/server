@@ -1,7 +1,7 @@
 import { AUTH_ERROR } from '@/constant/error/auth.error';
 import { UserService } from '@/providers/user/user.service';
 import { PrismaService } from '@common/prisma/prisma.service';
-import { Either, isLeft, left, right } from '@common/util/Either';
+import { Either, Left, Right } from '@common/util/Either';
 import { Injectable } from '@nestjs/common';
 import { CertificationCode } from '@prisma/client';
 
@@ -35,14 +35,14 @@ export class AuthLocalService {
     const { account, password } = dto;
     const user = await this.userService.findUser({ account });
     if (!user) {
-      return left(AUTH_ERROR.AUTH_INVALID);
+      return Left.create(AUTH_ERROR.AUTH_INVALID());
     }
     const { password: hashedPassword } = user;
     const isMatch = await this.authPasswordService.compare(
       password,
       hashedPassword,
     );
-    if (isLeft(isMatch)) {
+    if (isMatch.isLeft()) {
       return isMatch;
     }
     const accessToken = this.authJwtService.accessTokenSign({
@@ -56,7 +56,7 @@ export class AuthLocalService {
       type: dto.type,
     });
 
-    return right({
+    return Right.create({
       accessToken,
       refreshToken,
       nickname: user.nickname,
@@ -74,27 +74,27 @@ export class AuthLocalService {
       { userId: string }
     >
   > {
-    const { certificationId, account, password, phone, contryCode, nickname } =
+    const { certificationId, account, password, phone, countryCode, nickname } =
       dto;
-    const phonefull = `${contryCode}${phone}`;
+    const phonefull = `${countryCode}${phone}`;
     const accountExists = await this.userService.checkUserExists({
       account,
     });
     if (accountExists) {
-      return left(AUTH_ERROR.USER_ALREADY_EXISTS);
+      return Left.create(AUTH_ERROR.USER_ALREADY_EXISTS());
     }
 
     const phoneExists = await this.userService.checkUserExists({
       phone,
     });
     if (phoneExists) {
-      return left(AUTH_ERROR.USER_ALREADY_EXISTS);
+      return Left.create(AUTH_ERROR.USER_ALREADY_EXISTS());
     }
     const certificationCode = await this.validateSignupCertificationCode({
       certificationId,
       phone: phonefull,
     });
-    if (isLeft(certificationCode)) {
+    if (certificationCode.isLeft()) {
       return certificationCode;
     }
 
@@ -104,7 +104,7 @@ export class AuthLocalService {
         {
           account,
           phone: phone,
-          contryCode: contryCode,
+          countryCode: countryCode,
           password: hashedPassword,
           nickname,
         },
@@ -124,7 +124,7 @@ export class AuthLocalService {
         where: { id: certificationId },
         data: { status: 'SUCCESS' },
       });
-      return right({ userId });
+      return Right.create({ userId });
     });
   }
 
@@ -143,20 +143,20 @@ export class AuthLocalService {
         where: { id: certificationId },
       });
     if (!certificationCode) {
-      return left(AUTH_ERROR.CERTIFICATION_NOT_FOUND);
+      return Left.create(AUTH_ERROR.CERTIFICATION_NOT_FOUND());
     }
     if (certificationCode.status !== 'VERIFIED') {
-      return left(AUTH_ERROR.CERTIFICATION_INVALID);
+      return Left.create(AUTH_ERROR.CERTIFICATION_INVALID());
     }
     if (certificationCode.type !== 'SIGN_UP') {
-      return left(AUTH_ERROR.CERTIFICATION_INVALID);
+      return Left.create(AUTH_ERROR.CERTIFICATION_INVALID());
     }
     if (certificationCode.targetType !== 'PHONE') {
-      return left(AUTH_ERROR.CERTIFICATION_INVALID);
+      return Left.create(AUTH_ERROR.CERTIFICATION_INVALID());
     }
     if (certificationCode.target !== phone) {
-      return left(AUTH_ERROR.CERTIFICATION_INVALID);
+      return Left.create(AUTH_ERROR.CERTIFICATION_INVALID());
     }
-    return right(certificationCode);
+    return Right.create(certificationCode);
   }
 }

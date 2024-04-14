@@ -1,43 +1,74 @@
-import { AuthError } from '@type/auth/error';
-import typia from 'typia';
+import { BAD_REQUEST_ERROR, UNAUTHORIZED_ERROR } from '@common/util/Error';
 export namespace AUTH_ERROR {
-  export const USER_ALREADY_EXISTS =
-    typia.random<AuthError.USER_ALREADY_EXISTS>();
+  // export const USER_ALREADY_EXISTS = typia.random<AuthError.USER_ALREADY_EXISTS>();
+  export const USER_ALREADY_EXISTS = BAD_REQUEST_ERROR('USER_ALREADY_EXISTS');
 
-  export const AUTH_INVALID = typia.random<AuthError.AUTH_INVALID>();
+  // export const AUTH_INVALID = typia.random<AuthError.AUTH_INVALID>();
+  export const AUTH_INVALID = UNAUTHORIZED_ERROR('AUTH_INVALID');
 
-  export const OAUTH_NOT_SUPPORTED =
-    typia.random<AuthError.OAUTH_NOT_SUPPORTED>();
+  // export const OAUTH_NOT_SUPPORTED =
+  //   typia.random<AuthError.OAUTH_NOT_SUPPORTED>();
+  export const OAUTH_NOT_SUPPORTED = BAD_REQUEST_ERROR('OAUTH_NOT_SUPPORTED');
 
-  export const TOKEN_EXPIRED = typia.random<AuthError.TOKEN_EXPIRED>();
+  // export const TOKEN_EXPIRED = typia.random<AuthError.TOKEN_EXPIRED>();
+  export const TOKEN_EXPIRED = UNAUTHORIZED_ERROR('TOKEN_EXPIRED');
 
-  export const TOKEN_INVALID = typia.random<AuthError.TOKEN_INVALID>();
+  // export const TOKEN_INVALID = typia.random<AuthError.TOKEN_INVALID>();
+  export const TOKEN_INVALID = UNAUTHORIZED_ERROR('TOKEN_INVALID');
 
-  export const TOKEN_BLACKLISTED = typia.random<AuthError.TOKEN_BLACKLISTED>();
+  // export const TOKEN_BLACKLISTED = typia.random<AuthError.TOKEN_BLACKLISTED>();
+  export const TOKEN_BLACKLISTED = UNAUTHORIZED_ERROR('TOKEN_BLACKLISTED');
 
-  export const TOKEN_MISSING = typia.random<AuthError.TOKEN_MISSING>();
+  // export const TOKEN_MISSING = typia.random<AuthError.TOKEN_MISSING>();
+  export const TOKEN_MISSING = UNAUTHORIZED_ERROR('TOKEN_MISSING');
 
-  export const CERTIFICATION_NOT_SUPPORTED =
-    typia.random<AuthError.CERTIFICATION_NOT_SUPPORTED>();
+  // export const CERTIFICATION_NOT_SUPPORTED =
+  //   typia.random<AuthError.CERTIFICATION_NOT_SUPPORTED>();
+  export const CERTIFICATION_NOT_SUPPORTED = BAD_REQUEST_ERROR(
+    'CERTIFICATION_NOT_SUPPORTED',
+  );
 
-  export const CERTIFICATION_INVALID =
-    typia.random<AuthError.CERTIFICATION_INVALID>();
+  // export const CERTIFICATION_INVALID =
+  //   typia.random<AuthError.CERTIFICATION_INVALID>();
+  export const CERTIFICATION_INVALID = BAD_REQUEST_ERROR(
+    'CERTIFICATION_INVALID',
+  );
 
-  export const CERTIFICATION_EXPIRED =
-    typia.random<AuthError.CERTIFICATION_EXPIRED>();
+  // export const CERTIFICATION_EXPIRED =
+  //   typia.random<AuthError.CERTIFICATION_EXPIRED>();
+  export const CERTIFICATION_EXPIRED = BAD_REQUEST_ERROR(
+    'CERTIFICATION_EXPIRED',
+  );
 
-  export const CERTIFICATION_ALREADY_VERIFIED =
-    typia.random<AuthError.CERTIFICATION_ALREADY_VERIFIED>();
+  // export const CERTIFICATION_ALREADY_VERIFIED =
+  //   typia.random<AuthError.CERTIFICATION_ALREADY_VERIFIED>();
+  export const CERTIFICATION_ALREADY_VERIFIED = BAD_REQUEST_ERROR(
+    'CERTIFICATION_ALREADY_VERIFIED',
+  );
 
-  export const CERTIFICATION_LIMIT_EXCEEDED =
-    typia.random<AuthError.CERTIFICATION_LIMIT_EXCEEDED>();
+  // export const CERTIFICATION_LIMIT_EXCEEDED =
+  //   typia.random<AuthError.CERTIFICATION_LIMIT_EXCEEDED>();
+  export const CERTIFICATION_LIMIT_EXCEEDED = BAD_REQUEST_ERROR(
+    'CERTIFICATION_LIMIT_EXCEEDED',
+  );
 
-  export const CERTIFICATION_NOT_FOUND =
-    typia.random<AuthError.CERTIFICATION_NOT_FOUND>();
+  // export const CERTIFICATION_NOT_FOUND =
+  //   typia.random<AuthError.CERTIFICATION_NOT_FOUND>();
+  export const CERTIFICATION_NOT_FOUND = BAD_REQUEST_ERROR(
+    'CERTIFICATION_NOT_FOUND',
+  );
 
-  export const CERTIFICATION_FAILED =
-    typia.random<AuthError.CERTIFICATION_FAILED>();
+  // export const CERTIFICATION_FAILED =
+  //   typia.random<AuthError.CERTIFICATION_FAILED>();
+  export const CERTIFICATION_FAILED = BAD_REQUEST_ERROR('CERTIFICATION_FAILED');
 
-  export const TYPE_NOT_SUPPORTED =
-    typia.random<AuthError.TYPE_NOT_SUPPORTED>();
+  // export const TYPE_NOT_SUPPORTED =
+  //   typia.random<AuthError.TYPE_NOT_SUPPORTED>();
+  export const TYPE_NOT_SUPPORTED = BAD_REQUEST_ERROR('TYPE_NOT_SUPPORTED');
+
+  // export const TYPE_NOT_SUPPORTED_ = ERROR.generate(
+  //   'TYPE_NOT_SUPPORTED',
+  //   HttpStatus.BAD_REQUEST,
+  // );
+  export const TYPE_NOT_SUPPORTED_ = BAD_REQUEST_ERROR('TYPE_NOT_SUPPORTED');
 }

@@ -1,6 +1,5 @@
 import { CurrentUser } from '@common/decorator/CurrentUser';
 import { LoginOnly } from '@common/decorator/LoginOnly';
-import { isLeft } from '@common/util/Either';
 import { eitherToResponse, generateResponse } from '@common/util/Res';
 import { TypedBody, TypedRoute } from '@nestia/core';
 import { Controller, Res, UseGuards } from '@nestjs/common';
@@ -29,7 +28,8 @@ export class AuthController {
     @Res({ passthrough: true }) res: Response,
   ) {
     const result = await this.authService.login(dto);
-    if (isLeft(result)) {
+    if (result.isLeft()) {
+      result;
       return eitherToResponse(result);
     }
     const { refreshToken, ...rest } = result.value;

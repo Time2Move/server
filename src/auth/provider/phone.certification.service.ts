@@ -1,9 +1,9 @@
 import { AUTH_ERROR } from '@/constant/error/auth.error';
 import { SmsService } from '@/providers/sms.service';
-import { CertificationCodeRepository } from '@/repository/certificationCode.repository';
+import { CertificationCodeRepository } from '@/repository/certification/certificationCode.repository';
 import { PrismaService } from '@common/prisma/prisma.service';
 import { PrismaTxType } from '@common/prisma/prisma.type';
-import { Either, isLeft, left, right } from '@common/util/Either';
+import { Either, Left, Right } from '@common/util/Either';
 import { Injectable, Logger } from '@nestjs/common';
 import { CERTIFICATION_TYPE } from '@prisma/client';
 import { AuthError } from '@type/auth/error';
@@ -42,26 +42,27 @@ export class PhoneCertificationService {
           tx,
         );
         if (userExists) {
-          return left(AUTH_ERROR.USER_ALREADY_EXISTS);
+          return Left.create(AUTH_ERROR.USER_ALREADY_EXISTS());
         }
 
         // 인증번호 발송 횟수 제한
         const checkCertificationCodeCount =
           await this.checkCertificationCodeCount(target, type, tx);
-        if (isLeft(checkCertificationCodeCount)) {
+        if (checkCertificationCodeCount.isLeft()) {
           return checkCertificationCodeCount;
         }
-
         await this.createCertificationCode(target, code, type, tx);
         const sms = await this.smsService.send(target, code);
         if (!sms) {
           throw new Error('SMS 전송에 실패했습니다.');
         }
-        return right(true);
+        return Right.create(true);
       })
       .catch(() => {
         this.logger.error(`인증번호 발송에 실패했습니다: ${target} ${code}`);
-        return left(AUTH_ERROR.CERTIFICATION_FAILED);
+        return Left.create(
+          AUTH_ERROR.CERTIFICATION_FAILED('인증번호 발송 실패'),
+        );
       });
   }
 
@@ -90,10 +91,10 @@ export class PhoneCertificationService {
           tx,
         );
         if (!certificationCode) {
-          return left(AUTH_ERROR.CERTIFICATION_INVALID);
+          return Left.create(AUTH_ERROR.CERTIFICATION_INVALID());
         }
         if (certificationCode.status === 'VERIFIED') {
-          return left(AUTH_ERROR.CERTIFICATION_ALREADY_VERIFIED);
+          return Left.create(AUTH_ERROR.CERTIFICATION_ALREADY_VERIFIED());
         }
 
         if (certificationCode.expiredAt < new Date()) {
@@ -108,7 +109,7 @@ export class PhoneCertificationService {
             'EXPIRED',
             tx,
           );
-          return left(AUTH_ERROR.CERTIFICATION_EXPIRED);
+          return Left.create(AUTH_ERROR.CERTIFICATION_EXPIRED());
         }
         await this.certificationCodeRepo.updateManyStatus(
           {
@@ -120,11 +121,11 @@ export class PhoneCertificationService {
           'VERIFIED',
           tx,
         );
-        return right({ cetificationId: certificationCode.id });
+        return Right.create({ cetificationId: certificationCode.id });
       })
       .catch(() => {
         this.logger.error(`인증번호 검증에 실패했습니다: ${target} ${code}`);
-        return left(AUTH_ERROR.CERTIFICATION_INVALID);
+        return Left.create(AUTH_ERROR.CERTIFICATION_INVALID());
       });
   }
 
@@ -153,9 +154,9 @@ export class PhoneCertificationService {
       this.logger.error(
         `인증번호 발송 횟수 초과: ${target} ${todayCodes.length}`,
       );
-      return left(AUTH_ERROR.CERTIFICATION_LIMIT_EXCEEDED);
+      return Left.create(AUTH_ERROR.CERTIFICATION_LIMIT_EXCEEDED());
     }
-    return right(true);
+    return Right.create(true);
   }
 
   private async createCertificationCode(

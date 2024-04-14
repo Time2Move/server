@@ -19,11 +19,11 @@ export class AuthGuard implements CanActivate {
 
   private validateRequest(request: any) {
     const token = request.headers?.authorization?.split(' ')[1];
-    if (!token) return throwError(AUTH_ERROR.TOKEN_MISSING);
+    if (!token) return throwError(AUTH_ERROR.TOKEN_MISSING());
 
     const user = this.jwtService.accessTokenVerify(token);
     if (!user || !typia.is<JwtPayload>(user))
-      return throwError(AUTH_ERROR.TOKEN_INVALID);
+      return throwError(AUTH_ERROR.TOKEN_INVALID());
     request.user = user;
     return true;
   }

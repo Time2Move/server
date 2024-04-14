@@ -1,6 +1,6 @@
 import { SmsModule } from '@/module/sms.module';
 import { UserModule } from '@/module/user.module';
-import { CertificationCodeRepository } from '@/repository/certificationCode.repository';
+import { CertificationCodeRepository } from '@/repository/certification/certificationCode.repository';
 import { Global, Module } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import {

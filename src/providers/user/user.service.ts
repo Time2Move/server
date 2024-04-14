@@ -3,7 +3,7 @@ import { PrismaTxType } from '@common/prisma/prisma.type';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { User } from '@type/user';
-import { UserRepository } from '../../repository/user.repository';
+import { UserRepository } from '../../repository/user/user.repository';
 import { UserSnapshotService } from './user.snapshot.service';
 
 @Injectable()

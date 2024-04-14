@@ -33,14 +33,14 @@ export class RefreshGuard implements CanActivate {
 
   private async validateRequest(request: any) {
     const token = this.extractToken(request);
-    if (!token) return throwError(AUTH_ERROR.TOKEN_MISSING);
+    if (!token) return throwError(AUTH_ERROR.TOKEN_MISSING());
 
     const user = this.jwtService.refreshTokenVerify(token);
     if (!user || !this.isValidPayload(user))
-      return throwError(AUTH_ERROR.TOKEN_INVALID);
+      return throwError(AUTH_ERROR.TOKEN_INVALID());
 
     if (!(await this.isTokenValid(user.id, token))) {
-      return throwError(AUTH_ERROR.TOKEN_BLACKLISTED);
+      return throwError(AUTH_ERROR.TOKEN_BLACKLISTED());
     }
 
     request.user = user;

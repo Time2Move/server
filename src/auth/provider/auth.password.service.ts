@@ -1,7 +1,7 @@
 import { AUTH_ERROR } from '@/constant/error/auth.error';
 import { UserService } from '@/providers/user/user.service';
 import { PrismaService } from '@common/prisma/prisma.service';
-import { left, right } from '@common/util/Either';
+import { Left, Right } from '@common/util/Either';
 import { Inject, Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { PASSWORD_OPTIONS } from '../auth.constant';
@@ -25,8 +25,8 @@ export class AuthPasswordService {
 
   async compare(password: string, hashed: string) {
     const isMatch = await bcrypt.compare(password, hashed);
-    if (!isMatch) return left(AUTH_ERROR.AUTH_INVALID);
-    return right(true);
+    if (!isMatch) return Left.create(AUTH_ERROR.AUTH_INVALID());
+    return Right.create(true);
   }
 
   //   async changePassword(dto: Auth.ChangePassword.Request.Dto) {
@@ -73,7 +73,7 @@ export class AuthPasswordService {
   //         tx,
   //       );
   //     });
-  //     return right({ email, id });
+  //     return Right.create({ email, id });
   //   }
 
   //   private async changePasswordViaCurrentPassword(
@@ -103,12 +103,12 @@ export class AuthPasswordService {
   //         tx,
   //       );
   //     });
-  //     return right({ email, id });
+  //     return Right.create({ email, id });
   //   }
 
   //   private async checkUser(email: string) {
   //     const user = await this.userService.findUnique(email);
   //     if (isLeft(user)) return left(AuthError.User.USER_NOT_FOUND);
-  //     return right(user.right);
+  //     return Right.create(user.right);
   // }
 }

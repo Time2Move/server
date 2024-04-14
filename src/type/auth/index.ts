@@ -105,7 +105,7 @@ export namespace Auth {
         password: string;
         certificationId: string;
         phone: string;
-        contryCode: string;
+        countryCode: string;
         nickname: string;
       }
 
@@ -166,7 +166,7 @@ export namespace Auth {
       export type Dto = PhoneDto;
       export interface PhoneDto {
         target: string; // phone number (ex: 01012345678)
-        contryCode: string; // country code (ex: +82)
+        countryCode: string; // country code (ex: +82)
         targetType: 'PHONE';
         type: Type;
       }
@@ -194,7 +194,7 @@ export namespace Auth {
     export namespace Request {
       export interface PhoneDto {
         target: string;
-        contryCode: string;
+        countryCode: string;
         code: string;
         targetType: 'PHONE';
         type: 'SIGN_UP' | 'FIND_PASSWORD';

@@ -1,6 +1,6 @@
 import { ErrorHttpStatusCode } from '@nestjs/common/utils/http-error-by-code.util';
 import { Base } from '@type/index';
-import { Either, isLeft } from './Either';
+import { Either } from './Either';
 import { throwError } from './Error';
 
 export const generateResponse = <T>(data: T): Base.SUCCESS<T> => {
@@ -17,8 +17,9 @@ export const eitherToResponse = <
 >(
   either: Either<E, T>,
 ): Base.SUCCESS<T> | E => {
-  if (isLeft(either)) {
-    return throwError(either.value);
+  if (either.isLeft()) {
+    throwError(either.error);
+    return either.error;
   }
   return generateResponse(either.value);
 };

@@ -17,7 +17,7 @@ export namespace Base {
   export interface ERROR<T, H extends HttpStatus.ErrorCode> {
     error: T;
     status: H;
-    message: 'FAIL';
+    message: string;
     isSuccess: false;
   }
 

@@ -29,7 +29,7 @@ export class AuthJWTService implements BasicAuthJWTService {
         secret: this.option.access_secret,
       });
     } catch (_) {
-      return throwError(AUTH_ERROR.TOKEN_INVALID);
+      return throwError(AUTH_ERROR.TOKEN_INVALID('토큰이 유효하지 않습니다.'));
     }
   }
 
@@ -46,7 +46,7 @@ export class AuthJWTService implements BasicAuthJWTService {
         secret: this.option.refresh_secret,
       });
     } catch (_) {
-      return throwError(AUTH_ERROR.TOKEN_INVALID);
+      return throwError(AUTH_ERROR.TOKEN_INVALID('토큰이 유효하지 않습니다.'));
     }
   }
 }

@@ -4,7 +4,7 @@ export interface User {
   password: string;
   nickname: string;
   phone: string;
-  contryCode: string;
+  countryCode: string;
   createdAt: Date;
   updatedAt: Date;
   deletedAt: Date | null;
@@ -18,7 +18,7 @@ export namespace User {
     password: string;
     nickname: string;
     phone: string;
-    contryCode: string;
+    countryCode: string;
     createdAt: Date;
   }
 }
