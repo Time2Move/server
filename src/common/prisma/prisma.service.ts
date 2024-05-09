@@ -17,9 +17,6 @@ export class PrismaService extends PrismaClient implements OnModuleInit {
 
   async onModuleInit() {
     await this.$connect();
-
-    // 미들웨어
-    // 미들웨어 설정
   }
 
   async enableShutdownHooks(app: INestApplication) {

@@ -33,14 +33,20 @@ export const twilioModule = TwilioModule.forRoot({
 export const cacheModule = CacheModule.registerAsync({
   isGlobal: true,
   useFactory: async () => {
-    const url = process.env.REDIS_URL;
-    const store = await redisStore({
-      url,
-    });
-    return {
-      ttl: 60 * 60 * 24,
-      store: store,
-    } as unknown as CacheStore;
+    try {
+      const url = process.env.REDIS_URL;
+      console.log(url);
+      const store = await redisStore({
+        url,
+      });
+      return {
+        ttl: 60 * 60 * 24,
+        store: store,
+      } as unknown as CacheStore;
+    } catch (e) {
+      console.error('redis connect error', e);
+      return {};
+    }
   },
 });
 

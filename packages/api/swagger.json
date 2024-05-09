@@ -1,0 +1,1379 @@
+{
+  "openapi": "3.0.1",
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Local Server"
+    }
+  ],
+  "info": {
+    "version": "0.0.1",
+    "title": "knockk_api",
+    "description": "",
+    "license": {
+      "name": "UNLICENSED"
+    }
+  },
+  "paths": {
+    "/api": {
+      "get": {
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth": {
+      "get": {
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Base.SUCCESS__object"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Auth.Login.Request.OauthDto"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Auth.Login.Request.LocalDto"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Base.SUCCESSunknown"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthError.AUTH_INVALID"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthError.TYPE_NOT_SUPPORTED"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/signup": {
+      "post": {
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Auth.Signup.Request.OauthDto"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Auth.Signup.Request.LocalDto"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Base.SUCCESS__type"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthError.TYPE_NOT_SUPPORTED"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthError.CERTIFICATION_INVALID"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthError.CERTIFICATION_NOT_FOUND"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthError.USER_ALREADY_EXISTS"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/token": {
+      "get": {
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Base.SUCCESS__type.o1"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Base.SUCCESS__object.o1"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/certification": {
+      "post": {
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Auth.RequsetCertificationCode.Request.PhoneDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Base.SUCCESSboolean"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthError.TYPE_NOT_SUPPORTED"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthError.USER_ALREADY_EXISTS"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthError.CERTIFICATION_LIMIT_EXCEEDED"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthError.CERTIFICATION_FAILED"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/auth/certification/validate": {
+      "post": {
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Auth.ValidateCertificationCode.Request.PhoneDto"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Auth.ValidateCertificationCode.Request.EmailDto"
+                  }
+                ]
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/Base.SUCCESS__type.o2"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthError.TYPE_NOT_SUPPORTED"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthError.CERTIFICATION_INVALID"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthError.CERTIFICATION_NOT_FOUND"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthError.CERTIFICATION_EXPIRED"
+                    },
+                    {
+                      "$ref": "#/components/schemas/AuthError.CERTIFICATION_ALREADY_VERIFIED"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/car": {
+      "get": {
+        "tags": [],
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/drivings(parkingidstringcarIdstringdrivingIdstringlocationstringlatitudenumberlongitudenumberstatusPARKING_STATUSstartDateDateendDateDatecreatedAtDateupdatedAtDate...)..."
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Car.Create.Request.Dto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/LeftERRORCAR_ALREADY_EXISTSBAD_REQUEST"
+                    },
+                    {
+                      "$ref": "#/components/schemas/Right__type"
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Base.SUCCESS__object": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/__object"
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "SUCCESS"
+            ]
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "result",
+          "message",
+          "isSuccess"
+        ],
+        "description": "성공 응답"
+      },
+      "__object": {
+        "type": "object",
+        "properties": {
+          "isLogin": {
+            "type": "boolean"
+          }
+        },
+        "nullable": false,
+        "required": [
+          "isLogin"
+        ]
+      },
+      "Auth.Login.Request.OauthDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "GOOGLE",
+              "KAKAO",
+              "NAVER"
+            ]
+          },
+          "accessToken": {
+            "type": "string"
+          }
+        },
+        "nullable": false,
+        "required": [
+          "type",
+          "accessToken"
+        ]
+      },
+      "Auth.Login.Request.LocalDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "LOCAL"
+            ]
+          },
+          "account": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "nullable": false,
+        "required": [
+          "type",
+          "account",
+          "password"
+        ]
+      },
+      "Base.SUCCESSunknown": {
+        "type": "object",
+        "properties": {
+          "result": {},
+          "message": {
+            "type": "string",
+            "enum": [
+              "SUCCESS"
+            ]
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "result",
+          "message",
+          "isSuccess"
+        ],
+        "description": "성공 응답"
+      },
+      "AuthError.AUTH_INVALID": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "AUTH_INVALID"
+            ]
+          },
+          "status": {
+            "type": "number",
+            "enum": [
+              401
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "error",
+          "status",
+          "message",
+          "isSuccess"
+        ],
+        "description": "실패 응답"
+      },
+      "AuthError.TYPE_NOT_SUPPORTED": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "TYPE_NOT_SUPPORTED"
+            ]
+          },
+          "status": {
+            "type": "number",
+            "enum": [
+              400
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "error",
+          "status",
+          "message",
+          "isSuccess"
+        ],
+        "description": "실패 응답"
+      },
+      "Auth.Signup.Request.OauthDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "GOOGLE",
+              "KAKAO",
+              "NAVER"
+            ]
+          },
+          "accessToken": {
+            "type": "string"
+          }
+        },
+        "nullable": false,
+        "required": [
+          "type",
+          "accessToken"
+        ]
+      },
+      "Auth.Signup.Request.LocalDto": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "LOCAL"
+            ]
+          },
+          "account": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "certificationId": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "countryCode": {
+            "type": "string"
+          },
+          "nickname": {
+            "type": "string"
+          }
+        },
+        "nullable": false,
+        "required": [
+          "type",
+          "account",
+          "password",
+          "certificationId",
+          "phone",
+          "countryCode",
+          "nickname"
+        ]
+      },
+      "Base.SUCCESS__type": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "object",
+            "properties": {
+              "userId": {
+                "type": "string"
+              }
+            },
+            "nullable": false,
+            "required": [
+              "userId"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "SUCCESS"
+            ]
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "result",
+          "message",
+          "isSuccess"
+        ],
+        "description": "성공 응답"
+      },
+      "AuthError.CERTIFICATION_INVALID": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "CERTIFICATION_INVALID"
+            ]
+          },
+          "status": {
+            "type": "number",
+            "enum": [
+              400
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "error",
+          "status",
+          "message",
+          "isSuccess"
+        ],
+        "description": "실패 응답"
+      },
+      "AuthError.CERTIFICATION_NOT_FOUND": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "CERTIFICATION_NOT_FOUND"
+            ]
+          },
+          "status": {
+            "type": "number",
+            "enum": [
+              400
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "error",
+          "status",
+          "message",
+          "isSuccess"
+        ],
+        "description": "실패 응답"
+      },
+      "AuthError.USER_ALREADY_EXISTS": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "USER_ALREADY_EXISTS"
+            ]
+          },
+          "status": {
+            "type": "number",
+            "enum": [
+              400
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "error",
+          "status",
+          "message",
+          "isSuccess"
+        ],
+        "description": "실패 응답"
+      },
+      "Base.SUCCESS__type.o1": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "object",
+            "properties": {
+              "accessToken": {
+                "type": "string"
+              }
+            },
+            "nullable": false,
+            "required": [
+              "accessToken"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "SUCCESS"
+            ]
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "result",
+          "message",
+          "isSuccess"
+        ],
+        "description": "성공 응답"
+      },
+      "Base.SUCCESS__object.o1": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "$ref": "#/components/schemas/__object.o1"
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "SUCCESS"
+            ]
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "result",
+          "message",
+          "isSuccess"
+        ],
+        "description": "성공 응답"
+      },
+      "__object.o1": {
+        "type": "object",
+        "properties": {
+          "isLogin": {
+            "type": "boolean"
+          }
+        },
+        "nullable": false,
+        "required": [
+          "isLogin"
+        ]
+      },
+      "Auth.RequsetCertificationCode.Request.PhoneDto": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "string"
+          },
+          "countryCode": {
+            "type": "string"
+          },
+          "targetType": {
+            "type": "string",
+            "enum": [
+              "PHONE"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "FIND_PASSWORD",
+              "SIGN_UP"
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "target",
+          "countryCode",
+          "targetType",
+          "type"
+        ]
+      },
+      "Base.SUCCESSboolean": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "SUCCESS"
+            ]
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "result",
+          "message",
+          "isSuccess"
+        ],
+        "description": "성공 응답"
+      },
+      "AuthError.CERTIFICATION_LIMIT_EXCEEDED": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "CERTIFICATION_LIMIT_EXCEEDED"
+            ]
+          },
+          "status": {
+            "type": "number",
+            "enum": [
+              400
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "error",
+          "status",
+          "message",
+          "isSuccess"
+        ],
+        "description": "실패 응답"
+      },
+      "AuthError.CERTIFICATION_FAILED": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "CERTIFICATION_FAILED"
+            ]
+          },
+          "status": {
+            "type": "number",
+            "enum": [
+              400
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "error",
+          "status",
+          "message",
+          "isSuccess"
+        ],
+        "description": "실패 응답"
+      },
+      "Auth.ValidateCertificationCode.Request.PhoneDto": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "string"
+          },
+          "countryCode": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "targetType": {
+            "type": "string",
+            "enum": [
+              "PHONE"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "FIND_PASSWORD",
+              "SIGN_UP"
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "target",
+          "countryCode",
+          "code",
+          "targetType",
+          "type"
+        ]
+      },
+      "Auth.ValidateCertificationCode.Request.EmailDto": {
+        "type": "object",
+        "properties": {
+          "target": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "targetType": {
+            "type": "string",
+            "enum": [
+              "EMAIL"
+            ]
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "FIND_PASSWORD",
+              "SIGN_UP"
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "target",
+          "code",
+          "targetType",
+          "type"
+        ]
+      },
+      "Base.SUCCESS__type.o2": {
+        "type": "object",
+        "properties": {
+          "result": {
+            "type": "object",
+            "properties": {
+              "cetificationId": {
+                "type": "string"
+              }
+            },
+            "nullable": false,
+            "required": [
+              "cetificationId"
+            ]
+          },
+          "message": {
+            "type": "string",
+            "enum": [
+              "SUCCESS"
+            ]
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "result",
+          "message",
+          "isSuccess"
+        ],
+        "description": "성공 응답"
+      },
+      "AuthError.CERTIFICATION_EXPIRED": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "CERTIFICATION_EXPIRED"
+            ]
+          },
+          "status": {
+            "type": "number",
+            "enum": [
+              400
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "error",
+          "status",
+          "message",
+          "isSuccess"
+        ],
+        "description": "실패 응답"
+      },
+      "AuthError.CERTIFICATION_ALREADY_VERIFIED": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "enum": [
+              "CERTIFICATION_ALREADY_VERIFIED"
+            ]
+          },
+          "status": {
+            "type": "number",
+            "enum": [
+              400
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "error",
+          "status",
+          "message",
+          "isSuccess"
+        ],
+        "description": "실패 응답"
+      },
+      "drivings(parkingidstringcarIdstringdrivingIdstringlocationstringlatitudenumberlongitudenumberstatusPARKING_STATUSstartDateDateendDateDatecreatedAtDateupdatedAtDate...)...": {
+        "type": "object",
+        "properties": {
+          "drivings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/parkingidstringcarIdstringdrivingIdstringlocationstringlatitudenumberlongitudenumberstatusPARKING_STATUSstartDateDateendDateDatecreatedAtDateupdatedAtDate..."
+            }
+          },
+          "id": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "number": {
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/CAR_STATUS"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "nullable": false,
+        "required": [
+          "drivings",
+          "id",
+          "ownerId",
+          "type",
+          "number",
+          "status",
+          "createdAt",
+          "updatedAt"
+        ]
+      },
+      "parkingidstringcarIdstringdrivingIdstringlocationstringlatitudenumberlongitudenumberstatusPARKING_STATUSstartDateDateendDateDatecreatedAtDateupdatedAtDate...": {
+        "type": "object",
+        "properties": {
+          "parking": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "carId": {
+                  "type": "string"
+                },
+                "drivingId": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string",
+                  "description": "주차 위치 (주소)"
+                },
+                "latitude": {
+                  "type": "number"
+                },
+                "longitude": {
+                  "type": "number"
+                },
+                "status": {
+                  "$ref": "#/components/schemas/PARKING_STATUS"
+                },
+                "startDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "endDate": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                }
+              },
+              "nullable": false,
+              "required": [
+                "id",
+                "carId",
+                "drivingId",
+                "location",
+                "latitude",
+                "longitude",
+                "status",
+                "startDate",
+                "endDate",
+                "createdAt",
+                "updatedAt"
+              ]
+            }
+          },
+          "id": {
+            "type": "string"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "carId": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "rentalId": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "nullable": false,
+        "required": [
+          "parking",
+          "id",
+          "userId",
+          "carId",
+          "createdAt",
+          "updatedAt",
+          "rentalId"
+        ]
+      },
+      "PARKING_STATUS": {
+        "type": "string",
+        "enum": [
+          "PARKING",
+          "COMPLETE"
+        ]
+      },
+      "CAR_STATUS": {
+        "type": "string",
+        "enum": [
+          "ACTIVE",
+          "SCRAPPED"
+        ]
+      },
+      "Car.Create.Request.Dto": {
+        "type": "object",
+        "properties": {
+          "number": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "CONVERTIBLE",
+              "COUPE",
+              "HATCHBACK",
+              "MINIVAN",
+              "OTHER",
+              "SEDAN",
+              "SPORTS_CAR",
+              "SUV",
+              "TRUCK",
+              "VAN",
+              "WAGON"
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "number",
+          "type"
+        ]
+      },
+      "LeftERRORCAR_ALREADY_EXISTSBAD_REQUEST": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/ERRORCAR_ALREADY_EXISTSBAD_REQUEST"
+          }
+        },
+        "nullable": false,
+        "required": [
+          "error"
+        ]
+      },
+      "ERRORCAR_ALREADY_EXISTSBAD_REQUEST": {
+        "type": "object",
+        "properties": {
+          "isSuccess": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "status": {
+            "type": "number",
+            "enum": [
+              400
+            ]
+          },
+          "error": {
+            "type": "string",
+            "enum": [
+              "CAR_ALREADY_EXISTS"
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "stack": {
+            "type": "string"
+          }
+        },
+        "nullable": false,
+        "required": [
+          "isSuccess",
+          "message",
+          "status",
+          "error",
+          "name"
+        ]
+      },
+      "Right__type": {
+        "type": "object",
+        "properties": {
+          "value": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "ownerId": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              },
+              "number": {
+                "type": "string"
+              },
+              "status": {
+                "$ref": "#/components/schemas/CAR_STATUS"
+              },
+              "createdAt": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updatedAt": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "nullable": false,
+            "required": [
+              "id",
+              "ownerId",
+              "type",
+              "number",
+              "status",
+              "createdAt",
+              "updatedAt"
+            ]
+          }
+        },
+        "nullable": false,
+        "required": [
+          "value"
+        ]
+      }
+    },
+    "securitySchemes": {
+      "bearer": {
+        "type": "apiKey",
+        "name": "Authorization",
+        "in": "header"
+      }
+    }
+  },
+  "tags": []
+}

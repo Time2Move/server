@@ -27,12 +27,12 @@ export class CarController {
     return result;
   }
 
-  @TypedRoute.Patch('/:id')
-  @LoginOnly()
-  async update() {}
+  // @TypedRoute.Patch('/:id')
+  // @LoginOnly()
+  // async update() {}
 
-  /// soft delete를 사용하기에 delete는 put으로 대체
-  @TypedRoute.Put('/:id')
-  @LoginOnly()
-  async delete() {}
+  // /// soft delete를 사용하기에 delete는 put으로 대체
+  // @TypedRoute.Put('/:id')
+  // @LoginOnly()
+  // async delete() {}
 }
