@@ -346,23 +346,15 @@
           },
           "message": {
             "type": "string",
-            "enum": [
-              "SUCCESS"
-            ]
+            "enum": ["SUCCESS"]
           },
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              true
-            ]
+            "enum": [true]
           }
         },
         "nullable": false,
-        "required": [
-          "result",
-          "message",
-          "isSuccess"
-        ],
+        "required": ["result", "message", "isSuccess"],
         "description": "성공 응답"
       },
       "__object": {
@@ -373,39 +365,28 @@
           }
         },
         "nullable": false,
-        "required": [
-          "isLogin"
-        ]
+        "required": ["isLogin"]
       },
       "Auth.Login.Request.OauthDto": {
         "type": "object",
         "properties": {
           "type": {
             "type": "string",
-            "enum": [
-              "GOOGLE",
-              "KAKAO",
-              "NAVER"
-            ]
+            "enum": ["GOOGLE", "KAKAO", "NAVER"]
           },
           "accessToken": {
             "type": "string"
           }
         },
         "nullable": false,
-        "required": [
-          "type",
-          "accessToken"
-        ]
+        "required": ["type", "accessToken"]
       },
       "Auth.Login.Request.LocalDto": {
         "type": "object",
         "properties": {
           "type": {
             "type": "string",
-            "enum": [
-              "LOCAL"
-            ]
+            "enum": ["LOCAL"]
           },
           "account": {
             "type": "string"
@@ -415,11 +396,7 @@
           }
         },
         "nullable": false,
-        "required": [
-          "type",
-          "account",
-          "password"
-        ]
+        "required": ["type", "account", "password"]
       },
       "Base.SUCCESSunknown": {
         "type": "object",
@@ -427,23 +404,15 @@
           "result": {},
           "message": {
             "type": "string",
-            "enum": [
-              "SUCCESS"
-            ]
+            "enum": ["SUCCESS"]
           },
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              true
-            ]
+            "enum": [true]
           }
         },
         "nullable": false,
-        "required": [
-          "result",
-          "message",
-          "isSuccess"
-        ],
+        "required": ["result", "message", "isSuccess"],
         "description": "성공 응답"
       },
       "AuthError.AUTH_INVALID": {
@@ -451,33 +420,22 @@
         "properties": {
           "error": {
             "type": "string",
-            "enum": [
-              "AUTH_INVALID"
-            ]
+            "enum": ["AUTH_INVALID"]
           },
           "status": {
             "type": "number",
-            "enum": [
-              401
-            ]
+            "enum": [401]
           },
           "message": {
             "type": "string"
           },
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              false
-            ]
+            "enum": [false]
           }
         },
         "nullable": false,
-        "required": [
-          "error",
-          "status",
-          "message",
-          "isSuccess"
-        ],
+        "required": ["error", "status", "message", "isSuccess"],
         "description": "실패 응답"
       },
       "AuthError.TYPE_NOT_SUPPORTED": {
@@ -485,33 +443,22 @@
         "properties": {
           "error": {
             "type": "string",
-            "enum": [
-              "TYPE_NOT_SUPPORTED"
-            ]
+            "enum": ["TYPE_NOT_SUPPORTED"]
           },
           "status": {
             "type": "number",
-            "enum": [
-              400
-            ]
+            "enum": [400]
           },
           "message": {
             "type": "string"
           },
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              false
-            ]
+            "enum": [false]
           }
         },
         "nullable": false,
-        "required": [
-          "error",
-          "status",
-          "message",
-          "isSuccess"
-        ],
+        "required": ["error", "status", "message", "isSuccess"],
         "description": "실패 응답"
       },
       "Auth.Signup.Request.OauthDto": {
@@ -519,30 +466,21 @@
         "properties": {
           "type": {
             "type": "string",
-            "enum": [
-              "GOOGLE",
-              "KAKAO",
-              "NAVER"
-            ]
+            "enum": ["GOOGLE", "KAKAO", "NAVER"]
           },
           "accessToken": {
             "type": "string"
           }
         },
         "nullable": false,
-        "required": [
-          "type",
-          "accessToken"
-        ]
+        "required": ["type", "accessToken"]
       },
       "Auth.Signup.Request.LocalDto": {
         "type": "object",
         "properties": {
           "type": {
             "type": "string",
-            "enum": [
-              "LOCAL"
-            ]
+            "enum": ["LOCAL"]
           },
           "account": {
             "type": "string"
@@ -585,29 +523,19 @@
               }
             },
             "nullable": false,
-            "required": [
-              "userId"
-            ]
+            "required": ["userId"]
           },
           "message": {
             "type": "string",
-            "enum": [
-              "SUCCESS"
-            ]
+            "enum": ["SUCCESS"]
           },
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              true
-            ]
+            "enum": [true]
           }
         },
         "nullable": false,
-        "required": [
-          "result",
-          "message",
-          "isSuccess"
-        ],
+        "required": ["result", "message", "isSuccess"],
         "description": "성공 응답"
       },
       "AuthError.CERTIFICATION_INVALID": {
@@ -615,33 +543,22 @@
         "properties": {
           "error": {
             "type": "string",
-            "enum": [
-              "CERTIFICATION_INVALID"
-            ]
+            "enum": ["CERTIFICATION_INVALID"]
           },
           "status": {
             "type": "number",
-            "enum": [
-              400
-            ]
+            "enum": [400]
           },
           "message": {
             "type": "string"
           },
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              false
-            ]
+            "enum": [false]
           }
         },
         "nullable": false,
-        "required": [
-          "error",
-          "status",
-          "message",
-          "isSuccess"
-        ],
+        "required": ["error", "status", "message", "isSuccess"],
         "description": "실패 응답"
       },
       "AuthError.CERTIFICATION_NOT_FOUND": {
@@ -649,33 +566,22 @@
         "properties": {
           "error": {
             "type": "string",
-            "enum": [
-              "CERTIFICATION_NOT_FOUND"
-            ]
+            "enum": ["CERTIFICATION_NOT_FOUND"]
           },
           "status": {
             "type": "number",
-            "enum": [
-              400
-            ]
+            "enum": [400]
           },
           "message": {
             "type": "string"
           },
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              false
-            ]
+            "enum": [false]
           }
         },
         "nullable": false,
-        "required": [
-          "error",
-          "status",
-          "message",
-          "isSuccess"
-        ],
+        "required": ["error", "status", "message", "isSuccess"],
         "description": "실패 응답"
       },
       "AuthError.USER_ALREADY_EXISTS": {
@@ -683,33 +589,22 @@
         "properties": {
           "error": {
             "type": "string",
-            "enum": [
-              "USER_ALREADY_EXISTS"
-            ]
+            "enum": ["USER_ALREADY_EXISTS"]
           },
           "status": {
             "type": "number",
-            "enum": [
-              400
-            ]
+            "enum": [400]
           },
           "message": {
             "type": "string"
           },
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              false
-            ]
+            "enum": [false]
           }
         },
         "nullable": false,
-        "required": [
-          "error",
-          "status",
-          "message",
-          "isSuccess"
-        ],
+        "required": ["error", "status", "message", "isSuccess"],
         "description": "실패 응답"
       },
       "Base.SUCCESS__type.o1": {
@@ -723,29 +618,19 @@
               }
             },
             "nullable": false,
-            "required": [
-              "accessToken"
-            ]
+            "required": ["accessToken"]
           },
           "message": {
             "type": "string",
-            "enum": [
-              "SUCCESS"
-            ]
+            "enum": ["SUCCESS"]
           },
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              true
-            ]
+            "enum": [true]
           }
         },
         "nullable": false,
-        "required": [
-          "result",
-          "message",
-          "isSuccess"
-        ],
+        "required": ["result", "message", "isSuccess"],
         "description": "성공 응답"
       },
       "Base.SUCCESS__object.o1": {
@@ -756,23 +641,15 @@
           },
           "message": {
             "type": "string",
-            "enum": [
-              "SUCCESS"
-            ]
+            "enum": ["SUCCESS"]
           },
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              true
-            ]
+            "enum": [true]
           }
         },
         "nullable": false,
-        "required": [
-          "result",
-          "message",
-          "isSuccess"
-        ],
+        "required": ["result", "message", "isSuccess"],
         "description": "성공 응답"
       },
       "__object.o1": {
@@ -783,9 +660,7 @@
           }
         },
         "nullable": false,
-        "required": [
-          "isLogin"
-        ]
+        "required": ["isLogin"]
       },
       "Auth.RequsetCertificationCode.Request.PhoneDto": {
         "type": "object",
@@ -798,25 +673,15 @@
           },
           "targetType": {
             "type": "string",
-            "enum": [
-              "PHONE"
-            ]
+            "enum": ["PHONE"]
           },
           "type": {
             "type": "string",
-            "enum": [
-              "FIND_PASSWORD",
-              "SIGN_UP"
-            ]
+            "enum": ["FIND_PASSWORD", "SIGN_UP"]
           }
         },
         "nullable": false,
-        "required": [
-          "target",
-          "countryCode",
-          "targetType",
-          "type"
-        ]
+        "required": ["target", "countryCode", "targetType", "type"]
       },
       "Base.SUCCESSboolean": {
         "type": "object",
@@ -826,23 +691,15 @@
           },
           "message": {
             "type": "string",
-            "enum": [
-              "SUCCESS"
-            ]
+            "enum": ["SUCCESS"]
           },
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              true
-            ]
+            "enum": [true]
           }
         },
         "nullable": false,
-        "required": [
-          "result",
-          "message",
-          "isSuccess"
-        ],
+        "required": ["result", "message", "isSuccess"],
         "description": "성공 응답"
       },
       "AuthError.CERTIFICATION_LIMIT_EXCEEDED": {
@@ -850,33 +707,22 @@
         "properties": {
           "error": {
             "type": "string",
-            "enum": [
-              "CERTIFICATION_LIMIT_EXCEEDED"
-            ]
+            "enum": ["CERTIFICATION_LIMIT_EXCEEDED"]
           },
           "status": {
             "type": "number",
-            "enum": [
-              400
-            ]
+            "enum": [400]
           },
           "message": {
             "type": "string"
           },
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              false
-            ]
+            "enum": [false]
           }
         },
         "nullable": false,
-        "required": [
-          "error",
-          "status",
-          "message",
-          "isSuccess"
-        ],
+        "required": ["error", "status", "message", "isSuccess"],
         "description": "실패 응답"
       },
       "AuthError.CERTIFICATION_FAILED": {
@@ -884,33 +730,22 @@
         "properties": {
           "error": {
             "type": "string",
-            "enum": [
-              "CERTIFICATION_FAILED"
-            ]
+            "enum": ["CERTIFICATION_FAILED"]
           },
           "status": {
             "type": "number",
-            "enum": [
-              400
-            ]
+            "enum": [400]
           },
           "message": {
             "type": "string"
           },
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              false
-            ]
+            "enum": [false]
           }
         },
         "nullable": false,
-        "required": [
-          "error",
-          "status",
-          "message",
-          "isSuccess"
-        ],
+        "required": ["error", "status", "message", "isSuccess"],
         "description": "실패 응답"
       },
       "Auth.ValidateCertificationCode.Request.PhoneDto": {
@@ -927,26 +762,15 @@
           },
           "targetType": {
             "type": "string",
-            "enum": [
-              "PHONE"
-            ]
+            "enum": ["PHONE"]
           },
           "type": {
             "type": "string",
-            "enum": [
-              "FIND_PASSWORD",
-              "SIGN_UP"
-            ]
+            "enum": ["FIND_PASSWORD", "SIGN_UP"]
           }
         },
         "nullable": false,
-        "required": [
-          "target",
-          "countryCode",
-          "code",
-          "targetType",
-          "type"
-        ]
+        "required": ["target", "countryCode", "code", "targetType", "type"]
       },
       "Auth.ValidateCertificationCode.Request.EmailDto": {
         "type": "object",
@@ -959,25 +783,15 @@
           },
           "targetType": {
             "type": "string",
-            "enum": [
-              "EMAIL"
-            ]
+            "enum": ["EMAIL"]
           },
           "type": {
             "type": "string",
-            "enum": [
-              "FIND_PASSWORD",
-              "SIGN_UP"
-            ]
+            "enum": ["FIND_PASSWORD", "SIGN_UP"]
           }
         },
         "nullable": false,
-        "required": [
-          "target",
-          "code",
-          "targetType",
-          "type"
-        ]
+        "required": ["target", "code", "targetType", "type"]
       },
       "Base.SUCCESS__type.o2": {
         "type": "object",
@@ -990,29 +804,19 @@
               }
             },
             "nullable": false,
-            "required": [
-              "cetificationId"
-            ]
+            "required": ["cetificationId"]
           },
           "message": {
             "type": "string",
-            "enum": [
-              "SUCCESS"
-            ]
+            "enum": ["SUCCESS"]
           },
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              true
-            ]
+            "enum": [true]
           }
         },
         "nullable": false,
-        "required": [
-          "result",
-          "message",
-          "isSuccess"
-        ],
+        "required": ["result", "message", "isSuccess"],
         "description": "성공 응답"
       },
       "AuthError.CERTIFICATION_EXPIRED": {
@@ -1020,33 +824,22 @@
         "properties": {
           "error": {
             "type": "string",
-            "enum": [
-              "CERTIFICATION_EXPIRED"
-            ]
+            "enum": ["CERTIFICATION_EXPIRED"]
           },
           "status": {
             "type": "number",
-            "enum": [
-              400
-            ]
+            "enum": [400]
           },
           "message": {
             "type": "string"
           },
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              false
-            ]
+            "enum": [false]
           }
         },
         "nullable": false,
-        "required": [
-          "error",
-          "status",
-          "message",
-          "isSuccess"
-        ],
+        "required": ["error", "status", "message", "isSuccess"],
         "description": "실패 응답"
       },
       "AuthError.CERTIFICATION_ALREADY_VERIFIED": {
@@ -1054,33 +847,22 @@
         "properties": {
           "error": {
             "type": "string",
-            "enum": [
-              "CERTIFICATION_ALREADY_VERIFIED"
-            ]
+            "enum": ["CERTIFICATION_ALREADY_VERIFIED"]
           },
           "status": {
             "type": "number",
-            "enum": [
-              400
-            ]
+            "enum": [400]
           },
           "message": {
             "type": "string"
           },
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              false
-            ]
+            "enum": [false]
           }
         },
         "nullable": false,
-        "required": [
-          "error",
-          "status",
-          "message",
-          "isSuccess"
-        ],
+        "required": ["error", "status", "message", "isSuccess"],
         "description": "실패 응답"
       },
       "drivings(parkingidstringcarIdstringdrivingIdstringlocationstringlatitudenumberlongitudenumberstatusPARKING_STATUSstartDateDateendDateDatecreatedAtDateupdatedAtDate...)...": {
@@ -1226,17 +1008,11 @@
       },
       "PARKING_STATUS": {
         "type": "string",
-        "enum": [
-          "PARKING",
-          "COMPLETE"
-        ]
+        "enum": ["PARKING", "COMPLETE"]
       },
       "CAR_STATUS": {
         "type": "string",
-        "enum": [
-          "ACTIVE",
-          "SCRAPPED"
-        ]
+        "enum": ["ACTIVE", "SCRAPPED"]
       },
       "Car.Create.Request.Dto": {
         "type": "object",
@@ -1262,10 +1038,7 @@
           }
         },
         "nullable": false,
-        "required": [
-          "number",
-          "type"
-        ]
+        "required": ["number", "type"]
       },
       "LeftERRORCAR_ALREADY_EXISTSBAD_REQUEST": {
         "type": "object",
@@ -1275,33 +1048,25 @@
           }
         },
         "nullable": false,
-        "required": [
-          "error"
-        ]
+        "required": ["error"]
       },
       "ERRORCAR_ALREADY_EXISTSBAD_REQUEST": {
         "type": "object",
         "properties": {
           "isSuccess": {
             "type": "boolean",
-            "enum": [
-              false
-            ]
+            "enum": [false]
           },
           "message": {
             "type": "string"
           },
           "status": {
             "type": "number",
-            "enum": [
-              400
-            ]
+            "enum": [400]
           },
           "error": {
             "type": "string",
-            "enum": [
-              "CAR_ALREADY_EXISTS"
-            ]
+            "enum": ["CAR_ALREADY_EXISTS"]
           },
           "name": {
             "type": "string"
@@ -1311,13 +1076,7 @@
           }
         },
         "nullable": false,
-        "required": [
-          "isSuccess",
-          "message",
-          "status",
-          "error",
-          "name"
-        ]
+        "required": ["isSuccess", "message", "status", "error", "name"]
       },
       "Right__type": {
         "type": "object",
@@ -1362,9 +1121,7 @@
           }
         },
         "nullable": false,
-        "required": [
-          "value"
-        ]
+        "required": ["value"]
       }
     },
     "securitySchemes": {
