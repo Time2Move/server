@@ -1,0 +1,28 @@
+name: 'dev api - test and deploy'
+on:
+  push:
+    branches:
+      - dev
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+    with:
+      node-version: '20.5.1'
+      pnpm-version: '8'
+
+  build-and-deploy:
+    uses: ./.github/workflows/deploy.yml
+    with:
+      ECR_REPOSITORY: 'service-api'
+      PHASE: 'dev'
+      SERVICE: 'api'
+
+    secrets:
+      AWS_IAM_ROLE_ARN: ${{ secrets.AWS_IAM_ROLE_ARN }}
+      DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN_DEV }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

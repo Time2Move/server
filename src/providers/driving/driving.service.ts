@@ -1,5 +1,6 @@
 import { JwtPayload } from '@/auth/interface/auth.service.interface';
-import { AUTH_ERROR } from '@/constant/error/auth.error';
+import { CAR_ERROR } from '@/constant/error/car.error';
+import { RENTAL_ERROR } from '@/constant/error/rental.error';
 import { DrivingRepository } from '@/repository/driving/driving.repository';
 import { PrismaService } from '@common/prisma/prisma.service';
 import { Left, Right } from '@common/util/Either';
@@ -37,8 +38,7 @@ export class DrivingService {
       },
     });
     if (!isExistMyCar) {
-      // return left({ message: 'Car not found.' });
-      return Left.create(AUTH_ERROR.AUTH_INVALID());
+      return Left.create(CAR_ERROR.CAR_NOT_FOUND('존재하지 않는 차량입니다.'));
     }
 
     const newDriving = await this.drivingRepository.create({
@@ -65,8 +65,9 @@ export class DrivingService {
       },
     });
     if (!rentalInfo) {
-      // return left({ message: 'Rental not found.' });
-      return Left.create(AUTH_ERROR.AUTH_INVALID());
+      return Left.create(
+        RENTAL_ERROR.RENTAL_NOT_FOUND('대여 정보가 존재하지 않습니다.'),
+      );
     }
     const newDriving = await this.drivingRepository.create({
       id: v4(),

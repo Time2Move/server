@@ -35,6 +35,8 @@ model User {
   /// Profile
   snapshots    UserSnapshot[] /// 사용자 정보 스냅샷
   lastSnapshot UserLastSnapshot? /// 최신 스냅샷
+  UserProfileImages UserProfileImage[]
+
   /// Terms
   TermsAgreements TermsAgreements[]
   /// OAuth
@@ -43,7 +45,6 @@ model User {
   certifications  Certification[] /// 인증
   // Car
   cars             Car[] /// 소유한 차량
-  UserProfileImages UserProfileImage[]
   drivings          Driving[] /// 운전자
   // Reputation
   reputations      UserReputation[] /// 평판

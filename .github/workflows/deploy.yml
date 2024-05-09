@@ -19,11 +19,17 @@ on:
         description: 'Service'
         required: true
         type: string
+
     secrets:
       SLACK_WEBHOOK_URL:
         description: 'Slack Webhook URL'
         required: true
-
+      DOPPLER_TOKEN:
+        description: 'Doppler Token'
+        required: true
+      AWS_IAM_ROLE_ARN:
+        description: 'AWS IAM Role ARN'
+        required: true
 permissions:
   id-token: write
   contents: read
@@ -35,15 +41,19 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: doppler Install CLI
+        uses: dopplerhq/cli-action@v3
+
+      - name: download env
+        run: doppler secrets download --no-file --format env > .env
+        env:
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          # role-to-assume: arn:aws:iam::<alias>:role/github-action-role
+          role-to-assume: ${{ secrets.AWS_IAM_ROLE_ARN }}
           aws-region: ap-northeast-2
-
-      - name: Download env file
-        run: |
-          aws s3 cp s3://{}/${{ inputs.PHASE }}/${{ inputs.SERVICE }}/server.env .env
 
       - name: Login to Amazon ECR
         id: login-ecr

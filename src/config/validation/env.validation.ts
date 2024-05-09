@@ -30,23 +30,23 @@ export const envValidationSchema = Joi.object({
   //////////////////////////////////////////
   // OAUTH
   //// GOOGLE
-  OAUTH_GOOGLE_CLIENT_ID: Joi.string().required(),
-  OAUTH_GOOGLE_CLIENT_SECRET: Joi.string().required(),
-  OAUTH_GOOGLE_REDIRECT_URL: Joi.string().required(),
-  //// FACEBOOK
-  OAUTH_FACEBOOK_CLIENT_ID: Joi.string().required(),
-  OAUTH_FACEBOOK_CLIENT_SECRET: Joi.string().required(),
-  OAUTH_FACEBOOK_REDIRECT_URL: Joi.string().required(),
-  //// KAKAO
-  OAUTH_KAKAO_CLIENT_ID: Joi.string().required(),
-  OAUTH_KAKAO_CLIENT_SECRET: Joi.string().required(),
-  OAUTH_KAKAO_REDIRECT_URL: Joi.string().required(),
-  /// NAVER
-  OAUTH_NAVER_CLIENT_ID: Joi.string().required(),
-  OAUTH_NAVER_CLIENT_SECRET: Joi.string().required(),
-  OAUTH_NAVER_REDIRECT_URL: Joi.string().required(),
-  /// APPLE
-  OAUTH_APPLE_CLIENT_ID: Joi.string().required(),
-  OAUTH_APPLE_CLIENT_SECRET: Joi.string().required(),
-  OAUTH_APPLE_REDIRECT_URL: Joi.string().required(),
+  // OAUTH_GOOGLE_CLIENT_ID: Joi.string().required(),
+  // OAUTH_GOOGLE_CLIENT_SECRET: Joi.string().required(),
+  // OAUTH_GOOGLE_REDIRECT_URL: Joi.string().required(),
+  // //// FACEBOOK
+  // OAUTH_FACEBOOK_CLIENT_ID: Joi.string().required(),
+  // OAUTH_FACEBOOK_CLIENT_SECRET: Joi.string().required(),
+  // OAUTH_FACEBOOK_REDIRECT_URL: Joi.string().required(),
+  // //// KAKAO
+  // OAUTH_KAKAO_CLIENT_ID: Joi.string().required(),
+  // OAUTH_KAKAO_CLIENT_SECRET: Joi.string().required(),
+  // OAUTH_KAKAO_REDIRECT_URL: Joi.string().required(),
+  // /// NAVER
+  // OAUTH_NAVER_CLIENT_ID: Joi.string().required(),
+  // OAUTH_NAVER_CLIENT_SECRET: Joi.string().required(),
+  // OAUTH_NAVER_REDIRECT_URL: Joi.string().required(),
+  // /// APPLE
+  // OAUTH_APPLE_CLIENT_ID: Joi.string().required(),
+  // OAUTH_APPLE_CLIENT_SECRET: Joi.string().required(),
+  // OAUTH_APPLE_REDIRECT_URL: Joi.string().required(),
 });

@@ -14,6 +14,12 @@ CREATE TYPE "CERTIFICATION_TYPE" AS ENUM ('SIGN_UP', 'FIND_PASSWORD');
 CREATE TYPE "CERTIFICATION_STATUS" AS ENUM ('PENDING', 'VERIFIED', 'SUCCESS', 'EXPIRED');
 
 -- CreateEnum
+CREATE TYPE "CAR_STATUS" AS ENUM ('ACTIVE', 'SCRAPPED');
+
+-- CreateEnum
+CREATE TYPE "RENTAL_STATUS" AS ENUM ('REQUEST', 'ACCEPT', 'REJECT', 'COMPLETE');
+
+-- CreateEnum
 CREATE TYPE "PARKING_STATUS" AS ENUM ('PARKING', 'COMPLETE');
 
 -- CreateEnum
@@ -32,7 +38,7 @@ CREATE TABLE "user" (
     "password" TEXT NOT NULL,
     "nickname" TEXT NOT NULL,
     "phone" TEXT NOT NULL,
-    "contry_code" TEXT NOT NULL,
+    "country_code" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
     "deleted_at" TIMESTAMP(3),
@@ -132,6 +138,7 @@ CREATE TABLE "car" (
     "owner_id" UUID NOT NULL,
     "type" TEXT NOT NULL,
     "number" TEXT NOT NULL,
+    "status" "CAR_STATUS" NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
@@ -158,8 +165,23 @@ CREATE TABLE "car_snapshot" (
     "number" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "status" "CAR_STATUS" NOT NULL,
 
     CONSTRAINT "car_snapshot_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
+CREATE TABLE "Rental" (
+    "id" UUID NOT NULL,
+    "car_id" UUID NOT NULL,
+    "user_id" UUID NOT NULL,
+    "start_date" TIMESTAMP(3) NOT NULL,
+    "end_date" TIMESTAMP(3) NOT NULL,
+    "status" "RENTAL_STATUS" NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "Rental_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -169,6 +191,7 @@ CREATE TABLE "driving" (
     "car_id" UUID NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
+    "rental_id" UUID,
 
     CONSTRAINT "driving_pkey" PRIMARY KEY ("id")
 );
@@ -301,10 +324,16 @@ CREATE INDEX "certification_code_target_created_at_idx" ON "certification_code"(
 CREATE INDEX "certification_code_expired_at_idx" ON "certification_code"("expired_at");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "car_number_key" ON "car"("number");
+CREATE INDEX "car_number_status_idx" ON "car"("number", "status");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "car_snapshot_number_key" ON "car_snapshot"("number");
+
+-- CreateIndex
+CREATE INDEX "driving_user_id_idx" ON "driving"("user_id");
+
+-- CreateIndex
+CREATE INDEX "driving_car_id_user_id_idx" ON "driving"("car_id", "user_id");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "parking_car_id_drivingId_key" ON "parking"("car_id", "drivingId");
@@ -349,10 +378,19 @@ ALTER TABLE "car_image" ADD CONSTRAINT "car_image_image_id_fkey" FOREIGN KEY ("i
 ALTER TABLE "car_snapshot" ADD CONSTRAINT "car_snapshot_car_id_fkey" FOREIGN KEY ("car_id") REFERENCES "car"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
+ALTER TABLE "Rental" ADD CONSTRAINT "Rental_car_id_fkey" FOREIGN KEY ("car_id") REFERENCES "car"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Rental" ADD CONSTRAINT "Rental_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
 ALTER TABLE "driving" ADD CONSTRAINT "driving_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "driving" ADD CONSTRAINT "driving_car_id_fkey" FOREIGN KEY ("car_id") REFERENCES "car"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "driving" ADD CONSTRAINT "driving_rental_id_fkey" FOREIGN KEY ("rental_id") REFERENCES "Rental"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "parking" ADD CONSTRAINT "parking_car_id_fkey" FOREIGN KEY ("car_id") REFERENCES "car"("id") ON DELETE CASCADE ON UPDATE CASCADE;
