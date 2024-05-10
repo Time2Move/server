@@ -1,0 +1,108 @@
+model Car {
+  //------------------------------------------------
+  // columns
+  //------------------------------------------------
+  id        String   @id  @db.Uuid
+  ownerId   String   @map("owner_id") @db.Uuid
+  type      String   @map("type")
+  number    String 
+  status    CAR_STATUS @map("status") 
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  //---------------
+  /// relation
+  //---------------
+  owner  User       @relation(fields: [ownerId], references: [id], onDelete: Cascade)
+  images CarImage[] /// 차량 이미지
+  snapshots CarSnapshot[] /// 차량 정보 스냅샷
+
+  drivings Driving[] /// 운전자
+  parkings Parking[] /// 주차 정보
+
+  rentals Rental[]
+  @@map("car")
+  @@index([number, status])
+}
+
+model CarImage {
+  //------------------------------------------------
+  // columns
+  //------------------------------------------------
+  id        String   @id @db.Uuid
+  carId     String   @map("car_id") @db.Uuid
+  imageId   String   @map("image_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  //---------------
+  /// relation
+  //---------------
+  car   Car   @relation(fields: [carId], references: [id], onDelete: Cascade)
+  image Image @relation(fields: [imageId], references: [id], onDelete: Cascade)
+
+  @@map("car_image")
+}
+
+model CarSnapshot{
+  //------------------------------------------------
+  // columns
+  //------------------------------------------------
+  id        String   @id @db.Uuid
+  carId     String   @map("car_id") @db.Uuid
+  ownerId   String   @map("owner_id") @db.Uuid
+  type      String   @map("type")
+  number    String   @unique
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  status    CAR_STATUS @map("status")
+  //---------------
+  /// relation
+  //---------------
+  car   Car   @relation(fields: [carId], references: [id], onDelete: Cascade)
+
+  @@map("car_snapshot")
+}
+
+enum CAR_STATUS {
+  ACTIVE // 활성
+  SCRAPPED // 폐차
+}
+
+model Rental {
+  id String @id @db.Uuid
+  carId String @map("car_id") @db.Uuid
+  userId String @map("user_id") @db.Uuid
+  startDate DateTime @map("start_date")
+  endDate DateTime @map("end_date")
+  status RENTAL_STATUS @map("status")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  car Car @relation(fields: [carId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  snapshots RentalSnapshot[]
+  drivings Driving[]
+  @@map("rental")
+}
+
+model RentalSnapshot {
+  id String @id @db.Uuid
+  rentalId String @map("rental_id") @db.Uuid
+  startDate DateTime @map("start_date")  
+  endDate DateTime @map("end_date") // 렌트연장, 렌트시간변경등의 사유로 인해 날짜정보가 업데이트 될 수 있다.
+  status RENTAL_STATUS @map("status")
+  createdAt DateTime @default(now()) @map("created_at")
+
+
+  rental Rental @relation(fields: [rentalId], references: [id], onDelete: Cascade)
+
+  @@map("rental_snapshot")
+}
+
+
+enum RENTAL_STATUS {
+  REQUESTED // 요청
+  APPROVED // 수락
+  REJECTED // 거절
+  COMPLETED // 완료
+}

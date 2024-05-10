@@ -1,0 +1,110 @@
+model Driving {
+  //------------------------------------------------
+  // columns
+  //------------------------------------------------
+  id        String   @id @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  carId     String   @map("car_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  rentalId  String?  @map("rental_id") @db.Uuid 
+  status    DRIVING_STATUS @map("status")
+  endDate   DateTime? @map("end_date")
+  //---------------
+  /// relation
+  //---------------
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  car  Car  @relation(fields: [carId], references: [id], onDelete: Cascade)
+  parkings Parking[]
+  rental Rental? @relation(fields: [rentalId], references: [id], onDelete: SetNull)
+  snapshots DrivingSnapshot[]
+	@@map("driving")
+  @@index([userId])
+  @@index([carId, userId])
+}
+
+model DrivingSnapshot {
+  //------------------------------------------------
+  // columns
+  //------------------------------------------------
+  id        String   @id @db.Uuid
+  drivingId  String   @map("drivingId") @db.Uuid
+  location  String   @map("location")
+  latitude  Float    @map("latitude")
+  longitude Float    @map("longitude")
+  status    DRIVING_STATUS @map("status")
+  endDate   DateTime? @map("end_date")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  //---------------
+  /// relation
+  //---------------
+  driving Driving @relation(fields: [drivingId], references: [id], onDelete: Cascade)
+  @@map("driving_snapshot")
+}
+
+enum DRIVING_STATUS {
+  DRIVING
+  END
+}
+
+
+model Parking {
+  //------------------------------------------------
+  // columns
+  //------------------------------------------------
+  id        String   @id @db.Uuid
+  carId     String   @map("car_id") @db.Uuid
+  drivingId  String   @map("drivingId") @db.Uuid
+  location  String   @map("location") /// 주차 위치 (주소)
+  latitude  Float    @map("latitude")
+  longitude Float    @map("longitude")
+  status    PARKING_STATUS @map("status") 
+
+  startDate DateTime @map("start_date") 
+  endDate   DateTime @map("end_date")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  //---------------
+  /// relation
+  //---------------
+  car    Car    @relation(fields: [carId], references: [id], onDelete: Cascade)
+  driving Driving @relation(fields: [drivingId], references: [id], onDelete: Cascade)
+  snapshots ParkingSnapshot[]
+
+  @@unique([carId, drivingId])
+  @@map("parking")
+}
+
+model ParkingSnapshot {
+  //------------------------------------------------
+  // columns
+  //------------------------------------------------
+  id        String   @id @db.Uuid
+  carId     String   @map("car_id") @db.Uuid
+  drivingId  String   @map("drivingId") @db.Uuid
+  location  String   @map("location")
+  latitude  Float    @map("latitude")
+  longitude Float    @map("longitude")
+  status    PARKING_STATUS @map("status")
+  startDate DateTime @map("start_date") 
+  endDate   DateTime @map("end_date")
+
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  //---------------
+  /// relation
+  //---------------
+  parking Parking @relation(fields: [carId, drivingId], references: [carId, drivingId], onDelete: Cascade)
+  
+  @@map("parking_snapshot")
+}
+
+enum PARKING_STATUS {
+  PARKED // 주차중
+  COMPLETED // 완료
+}

@@ -1,0 +1,214 @@
+model User {
+  //------------------------------------------------
+  // columns
+  //------------------------------------------------
+  id           String            @id @db.Uuid
+  account      String            @unique
+  password     String
+  nickname     String            @unique
+  phone        String            @unique
+  countryCode   String            @map("country_code")
+  createdAt    DateTime          @default(now()) @map("created_at")
+  updatedAt    DateTime          @updatedAt @map("updated_at")
+  deletedAt    DateTime?         @map("deleted_at")
+  //---------------
+  /// relation
+  //---------------
+  /// Profile
+  snapshots    UserSnapshot[] /// 사용자 정보 스냅샷
+  lastSnapshot UserLastSnapshot? /// 최신 스냅샷
+  UserProfileImages UserProfileImage[]
+
+  /// Terms
+  TermsAgreements TermsAgreements[]
+  /// OAuth
+  oAuths          OAuth[] 
+  /// Certification
+  certifications  CertificationRecord[] /// 인증
+  // Car
+  cars             Car[] /// 소유한 차량
+  drivings          Driving[] /// 운전자
+  // Reputation
+  reputations      UserReputation[] /// 평판
+  writerReputations UserReputation[]  @relation("writerReputations") /// 평판 작성
+  // Notification
+  notifications    Notification[] /// 알림
+
+  relations Rental[]
+  @@map("user")
+}
+
+model UserSnapshot {
+  //------------------------------------------------
+  // columns
+  //------------------------------------------------
+  id           String            @id @db.Uuid
+  userId       String            @db.Uuid
+  account      String
+  password     String
+  nickname     String
+  phone        String
+  countryCode   String            @map("contry_code")
+  createdAt    DateTime          @default(now()) @map("created_at")
+  //------------------------------------------------
+  // relation
+  //------------------------------------------------
+  user         User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  lastSnapshot UserLastSnapshot?
+
+  @@map("user_snapshot")
+}
+
+model UserLastSnapshot {
+  //---------------
+  // column
+  //---------------
+  userId     String       @id @map("user_id") @db.Uuid /// 사용자 ID
+  snapshotId String       @map("snapshot_id") @db.Uuid /// 스냅샷 ID
+  createdAt  DateTime     @default(now()) @map("created_at")
+  updatedAt  DateTime     @updatedAt @map("updated_at")
+  //---------------
+  /// relation
+  //---------------
+  user       User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  snapshot   UserSnapshot @relation(fields: [snapshotId], references: [id], onDelete: Cascade)
+
+  @@unique([snapshotId])
+  @@map("user_last_snapshot")
+}
+
+model UserProfileImage {
+  //---------------
+  // column
+  //---------------
+  userId  String @id @map("user_id") @db.Uuid /// 사용자 ID
+  imageId String @map("image_id") @db.Uuid /// 이미지 ID
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+  //---------------
+  /// relation
+  //---------------
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  image     Image    @relation(fields: [imageId], references: [id], onDelete: Cascade)
+
+  @@unique([imageId])
+  @@map("user_profile_image")
+}
+
+//------------------------------------------------
+// TERMS
+//------------------------------------------------
+model TermsAgreements {
+  //---------------
+  // column
+  //---------------
+  id        String     @id @db.Uuid /// 약관동의 ID
+  userId    String     @map("user_id") @db.Uuid /// 사용자 ID
+  type      TERMS_TYPE // 서비스, 개인정보 수집, 만 14세이상, 마케팅수신동의
+  agree     Boolean // 동의 여부 
+  createdAt DateTime   @default(now()) @map("created_at")
+  updatedAt DateTime   @updatedAt @map("updated_at")
+  //---------------
+  /// relation
+  //---------------
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, type])
+  @@map("terms_agreements")
+}
+
+enum TERMS_TYPE {
+  SERVICE // 서비스 약관동의
+  PRIVACY // 개인 정보 수집동의
+  AGE_LIMIT // 만 14세 이상 동의
+  MARKETING // 마케팅 수신동의
+}
+
+
+
+//------------------------------------------------
+// OAUTH
+//------------------------------------------------
+model OAuth {
+  //------------------------------------------------
+  // columns
+  //------------------------------------------------
+  userId    String   @map("user_id") @db.Uuid 
+  provider  OAUT_PROVIDER   @map("provider")
+  providerId String  @map("provider_id")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  //---------------
+  /// relation
+  //---------------
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@id([userId, provider])
+  @@unique([provider, providerId])
+  @@map("oauth")
+}
+
+enum OAUT_PROVIDER {
+  GOOGLE
+  KAKAO
+  NAVER
+}
+
+
+//------------------------------------------------
+// CERTIFICATION
+//------------------------------------------------
+model CertificationRecord {
+  id                 String             @id @db.Uuid
+  certificationCodeId String            @map("certification_code_id") @db.Uuid @unique
+  userId             String             @map("user_id") @db.Uuid
+  createdAt          DateTime           @default(now()) @map("created_at")
+  updatedAt          DateTime           @updatedAt @map("updated_at")
+  user               User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  certificationCode  CertificationCode  @relation(fields: [certificationCodeId], references: [id], onDelete: Cascade)
+  
+  @@map("certification_record")
+}
+
+model CertificationCode {
+  id              String               @id @db.Uuid
+  targetType      CERTIFICATION_TARGET_TYPE
+  type            CERTIFICATION_TYPE
+  status          CERTIFICATION_STATUS
+  code            String
+  target          String
+  createdAt       DateTime             @default(now()) @map("created_at")
+  updatedAt       DateTime             @updatedAt @map("updated_at")
+  expiresAt       DateTime             @map("expires_at")
+  certification  CertificationRecord? /// 이 관계는 요구사항에 따라 조정될 수 있음
+  
+  @@map("certification_code")
+  @@index([target, targetType, type, expiresAt, status])
+  @@index([target, status])
+  @@index([createdAt])
+  @@index([target, createdAt])
+  @@index([expiresAt])
+}
+
+enum CERTIFICATION_TARGET_TYPE {
+  PHONE
+  // EMAIL  // 확장성 고려
+  // IDENTITY // 확장성 고려
+	@@map("CERTIFICATION_TARGET_TYPE")
+}
+
+enum CERTIFICATION_TYPE {
+  SIGN_UP
+  FIND_PASSWORD
+  CHANGE_PHONE_INFO
+}
+
+
+enum CERTIFICATION_STATUS {
+  PENDING // 대기
+  VERIFIED // 인증
+  SUCCESS // 성공  
+  EXPIRED // 만료
+}

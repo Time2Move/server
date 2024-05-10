@@ -1,0 +1,123 @@
+generator client {
+  provider = "prisma-client-js"
+  previewFeatures = ["prismaSchemaFolder"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator markdown {
+  provider = "prisma-markdown"
+  title    = "uncar"
+  output   = "../docs/ERD.md"
+}
+
+//------------------------------------------------
+// NOTIFICATION
+//------------------------------------------------
+model Notification {
+  //------------------------------------------------
+  // columns
+  //------------------------------------------------
+  id        String   @id @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  type      NOTIFICATION_TYPE @map("type")
+  title     String
+  content   String
+  readAt    DateTime? @map("read_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  //---------------
+  /// relation
+  //---------------
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notification")
+}
+
+enum NOTIFICATION_TYPE {
+  SYSTEM // 시스템
+  PARKING // 주차
+  REPUTATION // 평판
+  MESSAGE // 메시지
+  EVENT // 이벤트
+}
+
+//------------------------------------------------
+// USER REPUTATION
+//------------------------------------------------
+model UserReputation {
+  //------------------------------------------------
+  // columns
+  //------------------------------------------------
+  id        String   @id @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  writerId  String   @map("writer_id") @db.Uuid
+  score     Int
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  //---------------
+  /// relation
+  //---------------
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  writer User @relation(fields: [writerId], references: [id], onDelete: Cascade, name: "writerReputations")
+  reasons UserReputationReason[]
+
+  @@map("user_reputation")
+}
+
+model UserReputationReason {
+  //------------------------------------------------
+  // columns
+  //------------------------------------------------
+  id        String   @id @db.Uuid
+  userReputationId String @map("user_reputation_id") @db.Uuid
+  type      REPUTATION_TYPE @map("type")
+  score     Int
+  createdAt DateTime @default(now()) @map("created_at")
+
+  //---------------
+  /// relation
+  //---------------
+  userReputation UserReputation @relation(fields: [userReputationId], references: [id], onDelete: Cascade) 
+
+  @@map("user_reputation_reason")
+}
+
+enum REPUTATION_TYPE {
+  FAST_RESPONSE // 빠른 응답
+  KINDNESS // 친절
+  PUNCTUALITY // 시간엄수
+}
+
+//------------------------------------------------
+// IMAGE
+//------------------------------------------------
+model Image {
+  //---------------
+  // column
+  //---------------
+  id        String     @id @db.Uuid
+  userId    String     @map("user_id") @db.Uuid
+  type      IMAGE_TYPE
+  url       String
+  createdAt DateTime   @default(now()) @map("created_at")
+  deletedAt DateTime?  @map("deleted_at")
+
+  //---------------
+  /// relation
+  //---------------
+  carImages        CarImage[]
+  UserProfileImage UserProfileImage[]
+
+  @@map("image")
+}
+
+enum IMAGE_TYPE {
+  PROFILE // 프로필 이미지
+  CAR // 차량 이미지
+}
