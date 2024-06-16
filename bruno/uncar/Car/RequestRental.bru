@@ -1,0 +1,18 @@
+meta {
+  name: RequestRental
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{local}}/api/car/{{carId}}/rental
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "startDate": new Date().toString(),
+    "endDate": new Date().toString()
+  }
+}

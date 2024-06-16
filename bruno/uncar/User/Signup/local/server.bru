@@ -1,0 +1,23 @@
+meta {
+  name: server
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{server}}/api/signup
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "account": "vo0v0000@naver.com",
+    "password": "test1234",
+    "type": "LOCAL",
+    "nickname": "novo",
+    "phone": "01073616616",
+    "countryCode": "+82",
+    "certificationId": "0d7838d1-e7c9-4ddc-9a97-5ff3d6a75a50"
+  }
+}

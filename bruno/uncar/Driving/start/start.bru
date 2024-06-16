@@ -1,0 +1,15 @@
+meta {
+  name: start
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{local}}/api/car/{{carId}}/driving
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{access_token}}
+}

@@ -1,0 +1,38 @@
+meta {
+  name: local
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{local}}/api/login
+  body: json
+  auth: none
+}
+
+headers {
+  x-app: app
+}
+
+body:json {
+  {
+    "account": "vo0v0000@naver.com",
+    "password": "test1234",
+    "type": "LOCAL"
+  }
+}
+
+script:post-response {
+  const body = res.getBody();
+  
+  // let token = bru.setEnvVar("access_token", body.data.login.token);
+  
+  console.log(req.headers)
+  if(req.headers['x-app']==='app'){
+    
+    bru.setEnvVar("access_token", body.data.login.token);
+  }
+  
+  console.log(body.result.accessToken)
+  
+}

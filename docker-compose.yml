@@ -1,0 +1,31 @@
+services:
+  postgreSQL:
+    image: postgres:latest
+    container_name: postgres-uncar
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+    volumes:
+      - ./postgres/data/postgres/:/var/lib/postgresql/data
+    labels:
+      - 'name=postgres'
+      - 'mode=standalone'
+    restart: always
+
+  redis:
+    image: redis:latest
+    container_name: redis-uncar
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis/data:/data
+      - ./redis/conf/redis.conf:/usr/local/conf/redis.conf
+    # 컨테이너에 docker label을 이용해서 메타데이터 추가
+    labels:
+      - 'name=redis'
+      - 'mode=standalone'
+    # 컨테이너 종료시 재시작 여부 설정
+    restart: always
+    command: redis-server /usr/local/conf/redis.conf

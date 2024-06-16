@@ -1,0 +1,20 @@
+meta {
+  name: local
+  type: http
+  seq: 1
+}
+
+patch {
+  url: {{local}}/api/certification/
+  body: json
+  auth: none
+}
+
+body:json {
+  {
+    "type": "SIGN_UP",
+    "targetType": "PHONE",
+    "target": "+8201073616616",
+    "code": "950864"
+  }
+}

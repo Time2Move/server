@@ -94,27 +94,24 @@ CREATE TABLE "terms_agreements" (
 
 -- CreateTable
 CREATE TABLE "oauth" (
-    "id" UUID NOT NULL,
     "user_id" UUID NOT NULL,
     "provider" "OAUT_PROVIDER" NOT NULL,
     "provider_id" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "oauth_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "oauth_pkey" PRIMARY KEY ("user_id","provider")
 );
 
 -- CreateTable
-CREATE TABLE "certification" (
+CREATE TABLE "certification_record" (
     "id" UUID NOT NULL,
     "certification_code_id" UUID NOT NULL,
     "user_id" UUID NOT NULL,
-    "targetType" "CERTIFICATION_TARGET_TYPE" NOT NULL,
-    "type" "CERTIFICATION_TYPE" NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "certification_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "certification_record_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -127,7 +124,7 @@ CREATE TABLE "certification_code" (
     "target" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP(3) NOT NULL,
-    "expired_at" TIMESTAMP(3) NOT NULL,
+    "expires_at" TIMESTAMP(3) NOT NULL,
 
     CONSTRAINT "certification_code_pkey" PRIMARY KEY ("id")
 );
@@ -300,13 +297,7 @@ CREATE UNIQUE INDEX "terms_agreements_user_id_type_key" ON "terms_agreements"("u
 CREATE UNIQUE INDEX "oauth_provider_provider_id_key" ON "oauth"("provider", "provider_id");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "oauth_user_id_provider_key" ON "oauth"("user_id", "provider");
-
--- CreateIndex
-CREATE UNIQUE INDEX "certification_certification_code_id_key" ON "certification"("certification_code_id");
-
--- CreateIndex
-CREATE UNIQUE INDEX "certification_user_id_type_key" ON "certification"("user_id", "type");
+CREATE UNIQUE INDEX "certification_record_certification_code_id_key" ON "certification_record"("certification_code_id");
 
 -- CreateIndex
 CREATE INDEX "certification_code_target_idx" ON "certification_code"("target");
@@ -321,7 +312,7 @@ CREATE INDEX "certification_code_created_at_idx" ON "certification_code"("create
 CREATE INDEX "certification_code_target_created_at_idx" ON "certification_code"("target", "created_at");
 
 -- CreateIndex
-CREATE INDEX "certification_code_expired_at_idx" ON "certification_code"("expired_at");
+CREATE INDEX "certification_code_expires_at_idx" ON "certification_code"("expires_at");
 
 -- CreateIndex
 CREATE INDEX "car_number_status_idx" ON "car"("number", "status");
@@ -360,10 +351,10 @@ ALTER TABLE "terms_agreements" ADD CONSTRAINT "terms_agreements_user_id_fkey" FO
 ALTER TABLE "oauth" ADD CONSTRAINT "oauth_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "certification" ADD CONSTRAINT "certification_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "certification_record" ADD CONSTRAINT "certification_record_user_id_fkey" FOREIGN KEY ("user_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "certification" ADD CONSTRAINT "certification_certification_code_id_fkey" FOREIGN KEY ("certification_code_id") REFERENCES "certification_code"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "certification_record" ADD CONSTRAINT "certification_record_certification_code_id_fkey" FOREIGN KEY ("certification_code_id") REFERENCES "certification_code"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "car" ADD CONSTRAINT "car_owner_id_fkey" FOREIGN KEY ("owner_id") REFERENCES "user"("id") ON DELETE CASCADE ON UPDATE CASCADE;

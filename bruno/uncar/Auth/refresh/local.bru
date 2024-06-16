@@ -1,0 +1,16 @@
+meta {
+  name: local
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{local}}/api/auth
+  body: none
+  auth: none
+}
+
+headers {
+  Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiI5Y2I5YjA1My1mODg0LTQxZDgtOWQ0MS0wZGM4ZGQ0NWRhOTMiLCJhY2NvdW50Ijoidm8wdjAwMDBAbmF2ZXIuY29tIiwiaWF0IjoxNzE2OTAzNTI4LCJleHAiOjE3MTgxOTk1Mjh9.NiOU2wk6TqjdjF0d7Lavx84GrTMMd-KC2b9iK121UME
+  ~x-app: app
+}
